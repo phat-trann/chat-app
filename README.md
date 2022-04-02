@@ -5,3 +5,4 @@
 + npm install stream-chat universal-cookie
 + npm install steam-chat-react --force
 + npm install sass
++ npm install axios
