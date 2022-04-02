@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
+const cookies = new Cookies();
+
 const initialForm = {
   fullName: '',
   userName: '',
@@ -15,10 +17,27 @@ const Auth = () => {
   const [form, setForm] = useState(initialForm);
   const [isSignUp, setIsSignUp] = useState(true);
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    console.log(form);
+    const { fullName, userName, password, phoneNumber, avatarURL } = form;
+    const URL = 'http://localhost:5000/auth';
+    const { data: { token, userID, hashedPassword } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+      userName, password, fullName, phoneNumber, avatarURL
+    });
+
+    cookies.set('token', token);
+    cookies.set('userName', userName);
+    cookies.set('fullName', fullName);
+    cookies.set('userID', userID);
+
+    if (isSignUp) {
+      cookies.set('phoneNumber', phoneNumber);
+      cookies.set('avatarURL', avatarURL);
+      cookies.set('hashedPassword', hashedPassword);
+    }
+
+    window.location.reload();
   }
 
   const handleChange = (e) => {
