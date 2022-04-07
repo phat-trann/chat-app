@@ -2,8 +2,7 @@ import React from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
 
 const TeamChannelPreview = ({ channel, type }) => {
-  const { channel: activeChannel, client } = useChatContext();
-
+  const { channel: activeChannel, client, setActiveChannel } = useChatContext();
   const ChannelPreview = () => (
     <p className="channel-preview__item">
       # {channel?.data?.name || channel?.data?.id}
@@ -20,13 +19,14 @@ const TeamChannelPreview = ({ channel, type }) => {
           name={members[0]?.user?.fullName}
           size={24}
         />
-        <p>{members[0]?.user?.fullName}</p>
+        <p>{members[0]?.user?.fullName || members[0]?.user?.name || members[0]?.user?.id}</p>
       </div>
     )
   }
+
   return (
-    <div className={`channel-preview__wrapper${(channel?.id === activeChannel) && '__selected'}`}
-      onClick={() => console.log(channel)}>
+    <div className={`channel-preview__wrapper${(channel?.id === activeChannel?.id) ? '__selected' : ''}`}
+      onClick={() => setActiveChannel(channel)}>
       {type === 'team' ? <ChannelPreview /> : <DirectPreview />}
     </div>
   )

@@ -31,6 +31,14 @@ const CompanyHeader = () => (
   </div>
 )
 
+const customChannelTeamFilter = (channels) => {
+  return channels.filter(channel => channel.type === 'team');
+}
+
+const customChannelMessageFilter = (channels) => {
+  return channels.filter(channel => channel.type === 'messaging');
+}
+
 const ChannelListContainer = ({
   isCreating,
   setIsEditing,
@@ -49,6 +57,9 @@ const ChannelListContainer = ({
     window.location.reload();
   }
 
+  const { client } = useChatContext();
+  const filter = { members: { $in: [client.userID] } };
+
   return (
     <>
       <SideBar handleLogout={handleLogout} />
@@ -56,8 +67,8 @@ const ChannelListContainer = ({
         <CompanyHeader />
         <ChannelSearch />
         <ChannelList
-          filters={{}}
-          channelRenderFilterFn={() => { }}
+          filters={filter}
+          channelRenderFilterFn={customChannelTeamFilter}
           List={(listProps) => (
             <TeamChannelList
               {...listProps}
@@ -76,8 +87,8 @@ const ChannelListContainer = ({
           )}
         />
         <ChannelList
-          filters={{}}
-          channelRenderFilterFn={() => { }}
+          filters={filter}
+          channelRenderFilterFn={customChannelMessageFilter}
           List={(listProps) => (
             <TeamChannelList
               {...listProps}
