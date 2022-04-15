@@ -1,12 +1,12 @@
 # Chat application using ReactJS
-Phase 1: Follow https://www.youtube.com/watch?v=MJzbJQLGehs
-Phase 2: Fix issues
-Phase 3: Customize using redux
-Phase 4: Customize server and security
-Phase 5: Customize style using MUI & style-components
-
-- Using
-+ npm install stream-chat universal-cookie
-+ npm install steam-chat-react --force
-+ npm install sass
-+ npm install axios
+Phase 1: Follow https://www.youtube.com/watch?v=MJzbJQLGehs<br/>
+Phase 2: Fix issues<br/>
+Phase 3: Customize using redux<br/>
+Phase 4: Customize server and security<br/>
+Phase 5: Customize style using MUI & style-components<br/>
+<br/>
+- Using<br/>
++ npm install stream-chat universal-cookie<br/>
++ npm install steam-chat-react --force<br/>
++ npm install sass<br/>
++ npm install axios<br/>
