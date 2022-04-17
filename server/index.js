@@ -16,6 +16,14 @@ app.get('/', (req, res) => {
   res.send('Server running...');
 });
 
+app.get('/key', (req, res) => {
+  const api_key = process.env.STREAM_API_KEY;
+
+  res.json({
+    apiKey: api_key || null
+  });
+})
+
 app.use('/auth', authRouters);
 
 app.listen(PORT, () => console.log(PORT));

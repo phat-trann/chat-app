@@ -21,7 +21,7 @@ const Auth = () => {
     e.preventDefault();
 
     const { fullName, userName, password, phoneNumber, avatarURL } = form;
-    const URL = 'http://localhost:5000/auth';
+    const URL = `${process.env.REACT_APP_HOST}/auth`;
     const { data: { token, userID, hashedPassword } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
       userName, password, fullName, phoneNumber, avatarURL
     });
