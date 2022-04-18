@@ -19,7 +19,7 @@ const App = () => {
   const [client, setClient] = useState();
 
   useEffect(() => {
-    async function fetchData() {
+    (async () => {
       const URL = `${process.env.REACT_APP_HOST}/key`;
       const { data: { apiKey } } = await axios.get(URL);
       const currentClient = StreamChat.getInstance(apiKey);
@@ -36,9 +36,7 @@ const App = () => {
       }
 
       setClient(currentClient);
-    }
-
-    fetchData();
+    })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

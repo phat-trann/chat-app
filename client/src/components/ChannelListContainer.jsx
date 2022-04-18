@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChannelList, useChatContext } from 'stream-chat-react';
+import { Avatar, ChannelList, useChatContext } from 'stream-chat-react';
 import Cookies from 'universal-cookie';
 
 import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
@@ -8,11 +8,15 @@ import { IoIosHome, IoIosLogOut } from 'react-icons/io';
 
 const cookies = new Cookies();
 
-const SideBar = ({ handleLogout }) => (
+const SideBar = ({ handleLogout, client }) => (
   <div className="channel-list__sidebar">
     <div className="channel-list__sidebar__home">
       <div className="icon__inner">
-        <IoIosHome />
+        {
+          client?.user ?
+          <Avatar image={client.user.image} name={client.user.fullName || client.user.name} size={44} /> :
+          <IoIosHome />
+        }
       </div>
     </div>
     <div className="channel-list__sidebar__logout">
@@ -62,7 +66,7 @@ const ChannelListContainer = ({
 
   return (
     <>
-      <SideBar handleLogout={handleLogout} />
+      <SideBar handleLogout={handleLogout} client={client}/>
       <div className="channel-list__list__wrapper">
         <CompanyHeader />
         <ChannelSearch />

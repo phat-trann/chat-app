@@ -386,6 +386,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+
+    .str-chat__avatar {
+        margin: 0;
+    }
 }
 
 .channel-list__list__wrapper {

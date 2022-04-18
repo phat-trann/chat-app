@@ -38,9 +38,9 @@ const EditChannel = ({ setIsEditing }) => {
       await channel.addMembers(selectedUsers);
     }
 
-    setChannelName(null);
-    setIsEditing(false);
+    setChannelName('');
     setSelectedUsers([]);
+    setIsEditing(false);
   }
 
   return (
@@ -50,7 +50,7 @@ const EditChannel = ({ setIsEditing }) => {
         <CloseCreateChannel setIsEditing={setIsEditing} />
       </div>
       <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />
-      <UserList setSelectedUsers={setSelectedUsers} />
+      <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel}/>
       <div className="edit-channel__button-wrapper" onClick={updateChannel}>
         <p>Save changes</p>
       </div>

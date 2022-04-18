@@ -35,8 +35,8 @@ const UserItem = ({ user, setSelectedUsers }) => {
   return (
     <div className="user-item__wrapper" onClick={handleInvited}>
       <div className="user-item__name-wrapper">
-        <Avatar image={user.image} name={user.fullName} size={32} />
-        <p className="user-item__name">{user.fullName}</p>
+        <Avatar image={user.image} name={user.fullName || user.name} size={32} />
+        <p className="user-item__name">{user.fullName || user.name}</p>
       </div>
       {
         invited ?
@@ -47,42 +47,50 @@ const UserItem = ({ user, setSelectedUsers }) => {
   )
 }
 
-const UserList = ({ setSelectedUsers }) => {
+const UserList = ({ setSelectedUsers, currentChannel = null }) => {
   const { client } = useChatContext();
   const [users, setUsers] = useState([]);
-  const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState('Loading');
 
   useEffect(() => {
-    const getUsers = async () => {
-      if (showMessage) return;
-
-      setShowMessage(true);
+    (async () => {
+      let existedUsers = [];
 
       try {
+        if (currentChannel) {
+          const response = await currentChannel.queryMembers(
+            { id: { $ne: client.userID } },
+            { id: 1 },
+            { limit: 8 }
+          )
+      
+          if (response?.members?.length) {
+            existedUsers = response.members.map(el => el.user_id);
+          }
+        }
+
         const response = await client.queryUsers(
-          { id: { $ne: client.userID }, role: { $ne: 'admin' } },
+          { id: { $nin: [...existedUsers, client.userID] }, role: { $ne: 'admin' } },
           { id: 1 },
           { limit: 8 }
         )
         if (response?.users.length) {
+          console.log(response)
           setUsers(response.users);
-          setShowMessage(false);
+          setMessage(null);
         } else {
           setMessage('No user found');
         }
       } catch (error) {
         setMessage('Error loading, please refresh this page and try again.');
       }
-    }
-
-    if (client) getUsers();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <ListContainer>
-      {(showMessage) ? (
+      {(message) ? (
         <div className="user-list__message">
           {message}
         </div>
