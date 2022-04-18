@@ -5,8 +5,9 @@ Phase 3: Customize using redux<br/>
 Phase 4: Customize server (Update profile) and security<br/>
 Phase 5: Customize style using MUI & style-components<br/>
 <br/>
-- Using<br/>
-+ npm install stream-chat universal-cookie<br/>
-+ npm install steam-chat-react --force<br/>
-+ npm install sass<br/>
-+ npm install axios<br/>
+<H3>Using</H3>
+- Just using react & react-dom @17.0.2
+- npm install stream-chat universal-cookie<br/>
+- npm install steam-chat-react<br/>
+- npm install sass<br/>
+- npm install axios<br/>
