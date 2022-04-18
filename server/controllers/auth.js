@@ -15,7 +15,7 @@ const signup = async (req, res) => {
     const { fullName, userName, password, phoneNumber } = req.body;
     const { users } = await client.queryUsers({ name: userName });
 
-    if (users.length > 0) return res.status(400).json({ message: 'This user name already exits' });
+    if (users.length > 0) return res.status(200).json({ error: true, message: 'This user name already exits' });
 
     const userID = crypto.randomBytes(16).toString('hex');
     const serverClient = connect(api_key, api_secret, app_id);
@@ -26,7 +26,8 @@ const signup = async (req, res) => {
   } catch (err) {
     console.log(err);
 
-    res.status(500).json({
+    res.status(200).json({
+      error: true,
       message: err?.message
     });
   }
@@ -38,7 +39,7 @@ const login = async (req, res) => {
     const serverClient = connect(api_key, api_secret, app_id);
     const { users } = await client.queryUsers({ name: userName });
 
-    if (!users.length) return res.status(400).json({ message: 'User not found' });
+    if (!users.length) return res.status(200).json({ error: true, message: 'User not found' });
 
     const success = await bcrypt.compare(password, users[0].hashedPassword);
     const token = serverClient.createUserToken(users[0].id);
@@ -46,12 +47,13 @@ const login = async (req, res) => {
     if (success) {
       res.status(200).json({ token, fullName: users[0].fullName, userName, userID: users[0].id });
     } else {
-      res.status(500).json({ message: 'Incorrect password' });
+      res.status(200).json({ error: true, message: 'Incorrect password' });
     }
   } catch (err) {
     console.log(err);
 
-    res.status(500).json({
+    res.status(200).json({
+      error: true,
       message: err?.message
     });
   }

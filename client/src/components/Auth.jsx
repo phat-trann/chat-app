@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+import { MdError } from 'react-icons/md';
 
 const cookies = new Cookies();
 
@@ -16,15 +17,37 @@ const initialForm = {
 const Auth = () => {
   const [form, setForm] = useState(initialForm);
   const [isSignUp, setIsSignUp] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
+    if (!form.userName && !form.password) {
+      setErrorMessage('Some fields is missing!');
+      return;
+    }
+
+    if (isSignUp) {
+      if (Object.values(form).some(el => !el)) {
+        setErrorMessage('Some fields is missing!');
+        return;
+      }
+      else if (form.password !== form.confirmPassword) {
+        setErrorMessage('Password do NOT match!');
+        return;
+      }
+    }
+
     const { fullName, userName, password, phoneNumber, avatarURL } = form;
     const URL = `${process.env.REACT_APP_HOST}/auth`;
-    const { data: { token, userID, hashedPassword } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+    const { data: { token, userID, hashedPassword, error, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
       userName, password, fullName, phoneNumber, avatarURL
     });
+
+    if (error) {
+      setErrorMessage(message);
+      return;
+    }
 
     cookies.set('token', token);
     cookies.set('userName', userName);
@@ -48,8 +71,30 @@ const Auth = () => {
     setIsSignUp(pre => !pre);
   }
 
+  useEffect(() => {
+    setForm(initialForm);
+  }, [isSignUp])
+
+  useEffect(() => {
+    let timeOut;
+
+    if (errorMessage) {
+      timeOut = setTimeout(() => {
+        setErrorMessage('');
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(timeOut);
+    }
+  });
+
   return (
     <div className="auth__form-container">
+      <div className={`auth__form-error${errorMessage ? ' show' : ''}`}>
+        <MdError />
+        <span>{errorMessage}</span>
+      </div>
       <div className="auth__form-container_fields">
         <div className="auth__form-container_fields-content">
           <p>{isSignUp ? 'Sign up' : 'Sign in'}</p>
@@ -61,6 +106,7 @@ const Auth = () => {
                   name="fullName"
                   type="text"
                   placeholder="Full Name"
+                  value={form.fullName}
                   onChange={handleChange}
                 />
               </div>
@@ -72,6 +118,7 @@ const Auth = () => {
                 name="userName"
                 type="text"
                 placeholder="Username"
+                value={form.userName}
                 onChange={handleChange}
               />
             </div>
@@ -83,6 +130,7 @@ const Auth = () => {
                   name="phoneNumber"
                   type="text"
                   placeholder="Phone Number"
+                  value={form.phoneNumber}
                   onChange={handleChange}
                 />
               </div>
@@ -95,6 +143,7 @@ const Auth = () => {
                   name="avatarURL"
                   type="text"
                   placeholder="Avatar URL"
+                  value={form.avatarURL}
                   onChange={handleChange}
                 />
               </div>
@@ -106,6 +155,7 @@ const Auth = () => {
                 name="password"
                 type="password"
                 placeholder="Password"
+                value={form.password}
                 onChange={handleChange}
               />
             </div>
@@ -117,6 +167,7 @@ const Auth = () => {
                   name="confirmPassword"
                   type="password"
                   placeholder="Confirm Password"
+                  value={form.confirmPassword}
                   onChange={handleChange}
                 />
               </div>

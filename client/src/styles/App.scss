@@ -19,6 +19,32 @@ body {
     display: flex;
     flex-direction: row;
 
+    .auth__form-error {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        width: 20%;
+        margin: 3rem;
+        padding: 1rem;
+        border-radius: 5px;
+        background: #f7a7a3;
+        font-size: 1.7rem;
+        border-left: 5px solid #8f130c;
+        left: -20%;
+        opacity: 0;
+        transition: all .5s;
+        z-index: 1000;
+
+        span {
+            padding-left: 1rem;
+        }
+
+        &.show {
+            left: 0;
+            opacity: 1;
+        }
+    }
+
     &_fields {
         flex: 2;
         display: flex;
