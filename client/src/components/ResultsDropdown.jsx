@@ -45,7 +45,7 @@ const SearchResult = ({ channel, focusedId, type, setChannel }) => {
     >
       <div className="channel-search__result-user">
         <Avatar image={channel.image || undefined} name={channel.name} size={24} />
-        <p className="channel-search__result-text">{channel.name}</p>
+        <p className="channel-search__result-text">{channel.fullName || channel.name}</p>
       </div>
     </div>
   );
