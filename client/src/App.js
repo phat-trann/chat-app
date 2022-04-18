@@ -10,16 +10,18 @@ import 'stream-chat-react/dist/css/index.css';
 import './styles/App.scss';
 
 const cookies = new Cookies();
-const authToken = cookies.get('token');
 
 const App = () => {
   const [createType, setCreateType] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [client, setClient] = useState();
+  const [authToken, setAuthToken] = useState(cookies.get('token'));
 
   useEffect(() => {
     (async () => {
+      if (client || !authToken) return;
+
       const URL = `${process.env.REACT_APP_HOST}/key`;
       const { data: { apiKey } } = await axios.get(URL);
       const currentClient = StreamChat.getInstance(apiKey);
@@ -34,14 +36,11 @@ const App = () => {
           hashedPassword: cookies.get('hashedPassword')
         }, authToken);
       }
-
       setClient(currentClient);
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authToken, client]);
 
-  if (!authToken) return <Auth />
-
+  if (!authToken) return <Auth setAuthToken={setAuthToken}/>
   return (
     !client ?
       (<div>Loading</div>) :
@@ -52,6 +51,7 @@ const App = () => {
             setIsCreating={setIsCreating}
             setCreateType={setCreateType}
             setIsEditing={setIsEditing}
+            setAuthToken={setAuthToken}
           />
           <ChannelContainer
             isCreating={isCreating}

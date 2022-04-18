@@ -14,9 +14,9 @@ const initialForm = {
   avatarURL: ''
 }
 
-const Auth = () => {
+const Auth = ({ setAuthToken }) => {
   const [form, setForm] = useState(initialForm);
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmitForm = async (e) => {
@@ -60,7 +60,7 @@ const Auth = () => {
       cookies.set('hashedPassword', hashedPassword);
     }
 
-    window.location.reload();
+    setAuthToken(cookies.get('token'));
   }
 
   const handleChange = (e) => {

@@ -75,7 +75,6 @@ const UserList = ({ setSelectedUsers, currentChannel = null }) => {
           { limit: 8 }
         )
         if (response?.users.length) {
-          console.log(response)
           setUsers(response.users);
           setMessage(null);
         } else {
