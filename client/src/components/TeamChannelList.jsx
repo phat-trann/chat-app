@@ -5,9 +5,7 @@ const TeamChannelList = ({
   children,
   error = false,
   loading, type,
-  isCreating,
   setIsEditing,
-  setCreateType,
   setIsCreating
 }) => {
   if (error) {
@@ -37,11 +35,9 @@ const TeamChannelList = ({
           {type === 'team' ? 'Channels' : 'Direct Messages'}
         </p>
         <AddChannel
-          isCreating={isCreating}
           setIsEditing={setIsEditing}
-          setCreateType={setCreateType}
           setIsCreating={setIsCreating}
-          type={type === 'team' ? type : 'messaging'}
+          type={type || ''}
         />
       </div>
       {children}

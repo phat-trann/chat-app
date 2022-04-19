@@ -3,6 +3,7 @@ import { useChatContext } from 'stream-chat-react';
 
 import { UserList } from './';
 import { CloseCreateChannel } from '../assets';
+import { useSelector } from 'react-redux';
 
 const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   const handleChange = (e) => {
@@ -20,10 +21,11 @@ const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   )
 }
 
-const CreateChannel = ({ createType, setIsCreating }) => {
+const CreateChannel = ({ setIsCreating }) => {
   const { client, setActiveChannel } = useChatContext();
   const [channelName, setChannelName] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([client.userID || '']);
+  const createType = useSelector(state => state.type);
 
   const createChannel = async (e) => {
     e.preventDefault();

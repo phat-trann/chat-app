@@ -45,7 +45,6 @@ const customChannelMessageFilter = (channels) => {
 const ChannelListContainer = ({
   isCreating,
   setIsEditing,
-  setCreateType,
   setIsCreating
 }) => {
   const clientResults = useSelector((state) => state.client);
@@ -72,7 +71,6 @@ const ChannelListContainer = ({
               type="team"
               isCreating={isCreating}
               setIsEditing={setIsEditing}
-              setCreateType={setCreateType}
               setIsCreating={setIsCreating}
             />
           )}
@@ -92,7 +90,6 @@ const ChannelListContainer = ({
               type="messaging"
               isCreating={isCreating}
               setIsEditing={setIsEditing}
-              setCreateType={setCreateType}
               setIsCreating={setIsCreating}
             />
           )}

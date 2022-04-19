@@ -9,7 +9,6 @@ import 'stream-chat-react/dist/css/index.css';
 import './styles/App.scss';
 
 const App = () => {
-  const [createType, setCreateType] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const clientResults = useSelector((state) => state.client);
@@ -28,7 +27,6 @@ const App = () => {
           <ChannelListContainer
             isCreating={isCreating}
             setIsCreating={setIsCreating}
-            setCreateType={setCreateType}
             setIsEditing={setIsEditing}
           />
           <ChannelContainer
@@ -36,7 +34,6 @@ const App = () => {
             setIsCreating={setIsCreating}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            createType={createType}
           />
         </Chat>
       </div>)
