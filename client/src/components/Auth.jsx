@@ -6,7 +6,6 @@ import { MdError } from 'react-icons/md';
 const cookies = new Cookies();
 
 const initialForm = {
-  fullName: '',
   userName: '',
   password: '',
   confirmPassword: '',
@@ -38,10 +37,10 @@ const Auth = () => {
       }
     }
 
-    const { fullName, userName, password, phoneNumber, avatarURL } = form;
+    const { userName, password, phoneNumber, avatarURL } = form;
     const URL = `${process.env.REACT_APP_HOST}/auth`;
     const { data: { token, userID, hashedPassword, error, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
-      userName, password, fullName, phoneNumber, avatarURL
+      userName, password, phoneNumber, avatarURL
     });
 
     if (error) {
@@ -51,7 +50,6 @@ const Auth = () => {
 
     cookies.set('token', token);
     cookies.set('userName', userName);
-    cookies.set('fullName', fullName);
     cookies.set('userID', userID);
 
     if (isSignUp) {
@@ -99,76 +97,70 @@ const Auth = () => {
         <div className="auth__form-container_fields-content">
           <p>{isSignUp ? 'Sign up' : 'Sign in'}</p>
           <form onSubmit={handleSubmitForm}>
-            {isSignUp && (
-              <div className="auth__form-container_fields-content_input">
-                <label htmlFor="fullName">Full Name</label>
-                <input
-                  name="fullName"
-                  type="text"
-                  placeholder="Full Name"
-                  value={form.fullName}
-                  onChange={handleChange}
-                />
-              </div>
-            )}
-
             <div className="auth__form-container_fields-content_input">
-              <label htmlFor="userName">Username</label>
+              <label htmlFor="userName">* Username</label>
               <input
                 name="userName"
                 type="text"
                 placeholder="Username"
                 value={form.userName}
                 onChange={handleChange}
+                required
               />
             </div>
 
             {isSignUp && (
               <div className="auth__form-container_fields-content_input">
-                <label htmlFor="phoneNumber">Phone Number</label>
+                <label htmlFor="phoneNumber">* Phone Number</label>
                 <input
                   name="phoneNumber"
                   type="text"
                   placeholder="Phone Number"
+                  maxLength={10}
                   value={form.phoneNumber}
                   onChange={handleChange}
+                  pattern="(\d{10})"
+                  required
                 />
               </div>
             )}
 
             {isSignUp && (
               <div className="auth__form-container_fields-content_input">
-                <label htmlFor="avatarURL">Avatar URL</label>
+                <label htmlFor="avatarURL">Avatar URL (jpg or png)</label>
                 <input
                   name="avatarURL"
                   type="text"
                   placeholder="Avatar URL"
                   value={form.avatarURL}
                   onChange={handleChange}
+                  pattern="(https?:\/\/.*\.(?:png|jpg))"
                 />
               </div>
             )}
 
             <div className="auth__form-container_fields-content_input">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">* Password</label>
               <input
                 name="password"
                 type="password"
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
+                required
               />
             </div>
 
             {isSignUp && (
               <div className="auth__form-container_fields-content_input">
-                <label htmlFor="confirmPassword">Confirm Password</label>
+                <label htmlFor="confirmPassword">* Confirm Password</label>
                 <input
                   name="confirmPassword"
                   type="password"
                   placeholder="Confirm Password"
                   value={form.confirmPassword}
                   onChange={handleChange}
+                  required
                 />
               </div>
             )}

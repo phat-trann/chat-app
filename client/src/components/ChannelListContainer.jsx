@@ -14,8 +14,8 @@ const SideBar = ({ handleLogout, client }) => (
       <div className="icon__inner">
         {
           client?.user ?
-          <Avatar image={client.user.image} name={client.user.fullName || client.user.name} size={44} /> :
-          <IoIosHome />
+            <Avatar image={client.user.image} name={client.user.name} size={44} /> :
+            <IoIosHome />
         }
       </div>
     </div>
@@ -53,7 +53,6 @@ const ChannelListContainer = ({
     cookies.remove('token');
     cookies.remove('userID');
     cookies.remove('userName');
-    cookies.remove('fullName');
     cookies.remove('avatarURL');
     cookies.remove('phoneNumber');
     cookies.remove('hashedPassword');
@@ -66,7 +65,7 @@ const ChannelListContainer = ({
 
   return (
     <>
-      <SideBar handleLogout={handleLogout} client={client}/>
+      <SideBar handleLogout={handleLogout} client={client} />
       <div className="channel-list__list__wrapper">
         <CompanyHeader />
         <ChannelSearch />

@@ -35,8 +35,8 @@ const UserItem = ({ user, setSelectedUsers }) => {
   return (
     <div className="user-item__wrapper" onClick={handleInvited}>
       <div className="user-item__name-wrapper">
-        <Avatar image={user.image} name={user.fullName || user.name} size={32} />
-        <p className="user-item__name">{user.fullName || user.name}</p>
+        <Avatar image={user.image} name={user.name} size={32} />
+        <p className="user-item__name">{user.name}</p>
       </div>
       {
         invited ?
@@ -63,7 +63,7 @@ const UserList = ({ setSelectedUsers, currentChannel = null }) => {
             { id: 1 },
             { limit: 8 }
           )
-      
+
           if (response?.members?.length) {
             existedUsers = response.members.map(el => el.user_id);
           }
