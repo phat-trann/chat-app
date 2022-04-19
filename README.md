@@ -1,6 +1,6 @@
 # Chat application using ReactJS
-### Phase 1: Build a chat-app using stream-chat
-> (Refer https://getstream.io/chat/docs/react & https://www.youtube.com/watch?v=MJzbJQLGehs) - **Done**
+### Phase 1: Build a chat-app using stream-chat - **Done**
+> (Refer https://getstream.io/chat/docs/react & https://www.youtube.com/watch?v=MJzbJQLGehs)
 ### Phase 2: Fix issues - **Done**
 ### Phase 3: Customize using redux
 ### Phase 4: Customize server (Update profile) and security
