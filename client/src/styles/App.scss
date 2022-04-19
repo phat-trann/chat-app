@@ -625,6 +625,8 @@ body {
 
 .create-channel__header svg {
     cursor: pointer;
+    color: #004ccc;
+    font-size: 2rem;
 }
 
 .channel-name-input__wrapper {
@@ -880,10 +882,16 @@ body {
 .team-channel-header__channel-wrapper {
     display: flex;
     align-items: center;
-}
 
-.team-channel-header__channel-wrapper svg {
-    cursor: pointer;
+    svg {
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: gray;
+    }
+
+    span {
+        display: flex;
+    }
 }
 
 .team-channel-header__name {

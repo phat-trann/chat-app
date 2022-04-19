@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useChatContext } from 'stream-chat-react';
 
 import { UserList } from './';
-import { CloseCreateChannel } from '../assets';
 import { useDispatch } from 'react-redux';
-import { changeStatus } from '../actions';
-import { STATUS_EDITING } from '../actions/types';
+import { changeStatus, changeType } from '../actions';
+import { RESET_STATUS, STATUS_EDITING } from '../actions/types';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   const handleChange = (e) => {
@@ -28,7 +28,6 @@ const EditChannel = () => {
   const [channelName, setChannelName] = useState(channel?.data?.name);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const dispatch = useDispatch();
-
   const updateChannel = async (event) => {
     event.preventDefault();
 
@@ -46,12 +45,16 @@ const EditChannel = () => {
     setSelectedUsers([]);
     dispatch(changeStatus(STATUS_EDITING));
   }
+  const handleCloseCreate = () => {
+    dispatch(changeStatus(RESET_STATUS));
+    dispatch(changeType(''));
+  }
 
   return (
     <div className="edit-channel__container">
       <div className="edit-channel__header">
         <p>Edit Channel</p>
-        <CloseCreateChannel />
+        <AiOutlineCloseCircle onClick={handleCloseCreate}/>
       </div>
       <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />
       <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel}/>

@@ -3,8 +3,7 @@ import { useDispatch } from 'react-redux';
 import { MessageList, MessageInput, Thread, Window, Avatar, useChannelStateContext, useChatContext } from 'stream-chat-react';
 import { changeStatus } from '../actions';
 import { STATUS_EDITING } from '../actions/types';
-
-import { ChannelInfo } from '../assets';
+import { BiInfoCircle } from 'react-icons/bi';
 
 const TeamChannelHeader = () => {
   const { channel, watcher_count } = useChannelStateContext();
@@ -36,15 +35,15 @@ const TeamChannelHeader = () => {
     return (
       <div className='team-channel-header__channel-wrapper'>
         <p className='team-channel-header__name'># {channel.data.name}</p>
-        <span style={{ display: 'flex' }} onClick={handleClickEdit}>
-          <ChannelInfo />
+        <span onClick={handleClickEdit}>
+          <BiInfoCircle />
         </span>
       </div>
     );
   };
 
   const getWatcherText = (watchers) => {
-    return `${!watchers ? 'No' : watchers} users online`;
+    return `${!watchers ? 'No' : watchers} user(s) online`;
   };
 
   return (

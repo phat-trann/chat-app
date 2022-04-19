@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
-
-import { InviteIcon } from '../assets';
+import { ImCheckboxChecked, ImCheckboxUnchecked} from 'react-icons/im';
 
 const ListContainer = ({ children }) => {
   return (
@@ -40,8 +39,8 @@ const UserItem = ({ user, setSelectedUsers }) => {
       </div>
       {
         invited ?
-          <InviteIcon /> :
-          <div className="user-item__invite-empty" />
+          <ImCheckboxChecked /> :
+          <ImCheckboxUnchecked />
       }
     </div>
   )

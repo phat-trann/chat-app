@@ -1,5 +1,28 @@
 import React from 'react';
-import { AddChannel } from '../assets';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeStatus, changeType } from '../actions';
+import { RESET_STATUS, STATUS_CREATING } from '../actions/types';
+
+const AddChannel = ({ type }) => {
+  const dispatch = useDispatch();
+  const currentType = useSelector(state => state.type);
+  const currentStatus = useSelector(state => state.status);
+  const handleClickAddChannel = () => {
+    dispatch(changeType(type));
+    dispatch(changeStatus(((currentType && currentType !== type) || !currentStatus) ? STATUS_CREATING : RESET_STATUS));
+  }
+
+  return (
+    <div onClick={handleClickAddChannel}>
+      {
+        currentType === type && currentStatus === STATUS_CREATING ?
+          <AiOutlineMinus /> :
+          <AiOutlinePlus />
+      }
+    </div>
+  )
+};
 
 const TeamChannelList = ({
   children,

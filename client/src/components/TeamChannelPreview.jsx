@@ -19,7 +19,7 @@ const TeamChannelPreview = ({ channel, type }) => {
           name={members[0]?.user?.name}
           size={24}
         />
-        <p>{members[0]?.user?.name || members[0]?.user?.id}</p>
+        <p>{`${members[0]?.user?.name || members[0]?.user?.id}${members[1]?.user?.name ? ', ...' : ''}`}</p>
       </div>
     )
   }
