@@ -1,10 +1,10 @@
 # Chat application using ReactJS
-##### Phase 1: Build a chat-app using stream-chat
-* (Refer https://getstream.io/chat/docs/react & https://www.youtube.com/watch?v=MJzbJQLGehs) - **Done**
-##### Phase 2: Fix issues - **Done**
-##### Phase 3: Customize using redux
-##### Phase 4: Customize server (Update profile) and security
-##### Phase 5: Customize style using MUI & style-components
+### Phase 1: Build a chat-app using stream-chat
+> (Refer https://getstream.io/chat/docs/react & https://www.youtube.com/watch?v=MJzbJQLGehs) - **Done**
+### Phase 2: Fix issues - **Done**
+### Phase 3: Customize using redux
+### Phase 4: Customize server (Update profile) and security
+### Phase 5: Customize style using MUI & style-components
 
 #### Using
 - Just using react & react-dom @17.0.2
