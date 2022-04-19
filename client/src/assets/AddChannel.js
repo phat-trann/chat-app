@@ -1,14 +1,15 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { changeType } from '../actions';
+import { changeType, changeStatus } from '../actions';
+import { STATUS_CREATING, RESET_STATUS } from '../actions/types';
 
-export const AddChannel = ({ setIsCreating, setIsEditing, type }) => {
+export const AddChannel = ({ type }) => {
   const dispatch = useDispatch();
+  const currentType = useSelector(state => state.type);
   const handleClickAddChannel = () => {
     dispatch(changeType(type));
-    setIsCreating(prevState => !prevState);
-    setIsEditing(false);
+    dispatch(changeStatus(currentType ? STATUS_CREATING : RESET_STATUS));
   }
 
   return (

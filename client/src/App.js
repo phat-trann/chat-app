@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Chat } from 'stream-chat-react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,8 +9,6 @@ import 'stream-chat-react/dist/css/index.css';
 import './styles/App.scss';
 
 const App = () => {
-  const [isCreating, setIsCreating] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const clientResults = useSelector((state) => state.client);
   const dispatch = useDispatch();
 
@@ -24,17 +22,8 @@ const App = () => {
       <Auth client={clientResults?.client}/> :
       (<div className="app__wrapper">
         <Chat client={clientResults?.client} theme="team light">
-          <ChannelListContainer
-            isCreating={isCreating}
-            setIsCreating={setIsCreating}
-            setIsEditing={setIsEditing}
-          />
-          <ChannelContainer
-            isCreating={isCreating}
-            setIsCreating={setIsCreating}
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-          />
+          <ChannelListContainer />
+          <ChannelContainer />
         </Chat>
       </div>)
   )

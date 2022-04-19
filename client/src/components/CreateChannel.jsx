@@ -3,7 +3,9 @@ import { useChatContext } from 'stream-chat-react';
 
 import { UserList } from './';
 import { CloseCreateChannel } from '../assets';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeStatus } from '../actions';
+import { RESET_STATUS } from '../actions/types';
 
 const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   const handleChange = (e) => {
@@ -21,11 +23,12 @@ const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   )
 }
 
-const CreateChannel = ({ setIsCreating }) => {
+const CreateChannel = () => {
   const { client, setActiveChannel } = useChatContext();
   const [channelName, setChannelName] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([client.userID || '']);
   const createType = useSelector(state => state.type);
+  const dispatch = useDispatch();
 
   const createChannel = async (e) => {
     e.preventDefault();
@@ -40,7 +43,7 @@ const CreateChannel = ({ setIsCreating }) => {
       setChannelName('');
       setSelectedUsers([client.userID || '']);
       setActiveChannel(newChannel);
-      setIsCreating(false);
+      dispatch(changeStatus(RESET_STATUS));
     } catch (error) {
       console.error(error);
     }
@@ -50,7 +53,7 @@ const CreateChannel = ({ setIsCreating }) => {
     <div className="create-channel__container">
       <div className="create-channel__header">
         <p>{createType === 'team' ? 'Create a New Channel' : 'Send a direct Message'}</p>
-        <CloseCreateChannel setIsCreating={setIsCreating} />
+        <CloseCreateChannel />
       </div>
       {createType === 'team' && <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />}
       <UserList setSelectedUsers={setSelectedUsers} />

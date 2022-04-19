@@ -1,26 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Channel, MessageTeam } from 'stream-chat-react';
 
+import { STATUS_CREATING } from '../actions/types';
 import { ChannelInner, CreateChannel, EditChannel } from './';
 
-const ChannelContainer = ({
-  isCreating,
-  setIsCreating,
-  isEditing,
-  setIsEditing
-}) => {
-  if (isCreating) {
-    return (
-      <div className="channel__container">
-        <CreateChannel setIsCreating={setIsCreating} />
-      </div>
-    )
-  }
+const ChannelContainer = () => {
+  const status = useSelector(state => state.status);
 
-  if (isEditing) {
+  if (status) {
     return (
       <div className="channel__container">
-        <EditChannel setIsEditing={setIsEditing} />
+        {status === STATUS_CREATING ?
+          <CreateChannel /> :
+          <EditChannel />}
       </div>
     )
   }
@@ -37,7 +30,7 @@ const ChannelContainer = ({
       <Channel
         EmptyStateIndicator={EmptyState}
         Message={(messageProps, i) => <MessageTeam key={i} {...messageProps} />}>
-        <ChannelInner setIsEditing={setIsEditing} />
+        <ChannelInner />
       </Channel>
     </div>
   )

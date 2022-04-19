@@ -42,11 +42,7 @@ const customChannelMessageFilter = (channels) => {
   return channels.filter(channel => channel.type === 'messaging');
 }
 
-const ChannelListContainer = ({
-  isCreating,
-  setIsEditing,
-  setIsCreating
-}) => {
+const ChannelListContainer = () => {
   const clientResults = useSelector((state) => state.client);
   const dispatch = useDispatch();
   const client = clientResults.client;
@@ -69,9 +65,6 @@ const ChannelListContainer = ({
             <TeamChannelList
               {...listProps}
               type="team"
-              isCreating={isCreating}
-              setIsEditing={setIsEditing}
-              setIsCreating={setIsCreating}
             />
           )}
           Preview={(previewProps) => (
@@ -88,9 +81,6 @@ const ChannelListContainer = ({
             <TeamChannelList
               {...listProps}
               type="messaging"
-              isCreating={isCreating}
-              setIsEditing={setIsEditing}
-              setIsCreating={setIsCreating}
             />
           )}
           Preview={(previewProps) => (

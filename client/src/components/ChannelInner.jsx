@@ -1,15 +1,22 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { MessageList, MessageInput, Thread, Window, Avatar, useChannelStateContext, useChatContext } from 'stream-chat-react';
+import { changeStatus } from '../actions';
+import { STATUS_EDITING } from '../actions/types';
 
 import { ChannelInfo } from '../assets';
 
-const TeamChannelHeader = ({ setIsEditing }) => {
+const TeamChannelHeader = () => {
   const { channel, watcher_count } = useChannelStateContext();
   const { client } = useChatContext();
 
   const MessagingHeader = () => {
     const members = Object.values(channel.state.members).filter(({ user }) => user.id !== client.userID);
     const additionalMembers = members.length - 3;
+    const dispatch = useDispatch();
+    const handleClickEdit = () => {
+      dispatch(changeStatus(STATUS_EDITING));
+    }
 
     if (channel.type === 'messaging') {
       return (
@@ -29,7 +36,7 @@ const TeamChannelHeader = ({ setIsEditing }) => {
     return (
       <div className='team-channel-header__channel-wrapper'>
         <p className='team-channel-header__name'># {channel.data.name}</p>
-        <span style={{ display: 'flex' }} onClick={() => setIsEditing(true)}>
+        <span style={{ display: 'flex' }} onClick={handleClickEdit}>
           <ChannelInfo />
         </span>
       </div>
@@ -50,11 +57,11 @@ const TeamChannelHeader = ({ setIsEditing }) => {
   );
 };
 
-const ChannelInner = ({ setIsEditing }) => {
+const ChannelInner = () => {
   return (
     <div style={{ display: 'flex', width: '100%' }}>
       <Window>
-        <TeamChannelHeader setIsEditing={setIsEditing} />
+        <TeamChannelHeader />
         <MessageList />
         <MessageInput />
       </Window>
