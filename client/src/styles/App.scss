@@ -1619,6 +1619,14 @@ div.rta__autocomplete.str-chat__emojisearch {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.str-chat__li {
+    padding: 0 65px;
+}
+
+.str-chat__message-text-inner {
+    padding: 10px;
+}
+
 .str-chat .str-chat__list--thread {
     padding: 0px;
 }

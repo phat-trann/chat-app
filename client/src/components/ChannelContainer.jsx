@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Channel, MessageTeam } from 'stream-chat-react';
+import { Channel, MessageSimple } from 'stream-chat-react';
 
 import { STATUS_CREATING } from '../actions/types';
 import { ChannelInner, CreateChannel, EditChannel } from './';
@@ -29,7 +29,7 @@ const ChannelContainer = () => {
     <div className="channel__container">
       <Channel
         EmptyStateIndicator={EmptyState}
-        Message={(messageProps, i) => <MessageTeam key={i} {...messageProps} />}>
+        Message={(messageProps, i) => <MessageSimple key={i} {...messageProps} />}>
         <ChannelInner />
       </Channel>
     </div>
