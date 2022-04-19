@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { changeStatus } from '../actions';
+import { changeStatus, changeType } from '../actions';
 import { RESET_STATUS } from '../actions/types';
 
 export const CloseCreateChannel = () => {
@@ -16,6 +16,7 @@ export const CloseCreateChannel = () => {
       xmlns='http://www.w3.org/2000/svg'
       onClick={() => {
         dispatch(changeStatus(RESET_STATUS));
+        dispatch(changeType(''));
       }}
     >
       <path

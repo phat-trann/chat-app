@@ -4,7 +4,7 @@ import { useChatContext } from 'stream-chat-react';
 import { UserList } from './';
 import { CloseCreateChannel } from '../assets';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeStatus } from '../actions';
+import { changeStatus, changeType } from '../actions';
 import { RESET_STATUS } from '../actions/types';
 
 const ChannelNameInput = ({ channelName = '', setChannelName }) => {
@@ -44,6 +44,7 @@ const CreateChannel = () => {
       setSelectedUsers([client.userID || '']);
       setActiveChannel(newChannel);
       dispatch(changeStatus(RESET_STATUS));
+      dispatch(changeType(''));
     } catch (error) {
       console.error(error);
     }
