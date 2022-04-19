@@ -16,7 +16,6 @@ const clientAction = () => {
       await client.connectUser({
         id: cookies.get('userID'),
         name: cookies.get('userName'),
-        fullName: cookies.get('fullName'),
         image: cookies.get('avatarURL'),
         phoneNumber: cookies.get('phoneNumber'),
         hashedPassword: cookies.get('hashedPassword')
