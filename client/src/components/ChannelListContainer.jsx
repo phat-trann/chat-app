@@ -47,8 +47,7 @@ const ChannelListContainer = ({
   isCreating,
   setIsEditing,
   setCreateType,
-  setIsCreating,
-  setAuthToken
+  setIsCreating
 }) => {
   const handleLogout = () => {
     cookies.remove('token');
@@ -59,7 +58,7 @@ const ChannelListContainer = ({
     cookies.remove('phoneNumber');
     cookies.remove('hashedPassword');
 
-    setAuthToken(cookies.get('token'));
+    window.location.reload();
   }
 
   const { client } = useChatContext();

@@ -1,49 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { StreamChat } from 'stream-chat';
 import { Chat } from 'stream-chat-react';
-import Cookies from 'universal-cookie';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ChannelContainer, ChannelListContainer, Auth } from './components';
+import { clientAction } from './actions';
 
 import 'stream-chat-react/dist/css/index.css';
 import './styles/App.scss';
 
-const cookies = new Cookies();
 
 const App = () => {
   const [createType, setCreateType] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [client, setClient] = useState();
-  const [authToken, setAuthToken] = useState(cookies.get('token'));
+  const client = useSelector((state) => state.client);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      if (client || !authToken) return;
+    dispatch(clientAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-      const URL = `${process.env.REACT_APP_HOST}/key`;
-      const { data: { apiKey } } = await axios.get(URL);
-      const currentClient = StreamChat.getInstance(apiKey);
-
-      if (authToken) {
-        currentClient.connectUser({
-          id: cookies.get('userID'),
-          name: cookies.get('userName'),
-          fullName: cookies.get('fullName'),
-          image: cookies.get('avatarURL'),
-          phoneNumber: cookies.get('phoneNumber'),
-          hashedPassword: cookies.get('hashedPassword')
-        }, authToken);
-      }
-      setClient(currentClient);
-    })();
-  }, [authToken, client]);
-
-  if (!authToken) return <Auth setAuthToken={setAuthToken}/>
   return (
-    !client ?
-      (<div>Loading</div>) :
+    !client?.user?.id ?
+      <Auth /> :
       (<div className="app__wrapper">
         <Chat client={client} theme="team light">
           <ChannelListContainer
@@ -51,7 +31,6 @@ const App = () => {
             setIsCreating={setIsCreating}
             setCreateType={setCreateType}
             setIsEditing={setIsEditing}
-            setAuthToken={setAuthToken}
           />
           <ChannelContainer
             isCreating={isCreating}
