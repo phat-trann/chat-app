@@ -1,5 +1,6 @@
 # Chat application using ReactJS
-Phase 1: Follow https://www.youtube.com/watch?v=MJzbJQLGehs - <b>Done</b><br/>
+Phase 1: Build a chat-app using stream-chat
+* (Refer https://getstream.io/chat/docs/react & https://www.youtube.com/watch?v=MJzbJQLGehs) - <b>Done</b><br/>
 Phase 2: Fix issues - <b>Done</b><br/>
 Phase 3: Customize using redux<br/>
 Phase 4: Customize server (Update profile) and security<br/>
@@ -11,3 +12,5 @@ Phase 5: Customize style using MUI & style-components<br/>
 - npm install steam-chat-react<br/>
 - npm install sass<br/>
 - npm install axios<br/>
+- npm install redux react-redux<br/>
+- npm install @redux-devtools/extension -save-dev<br/>
