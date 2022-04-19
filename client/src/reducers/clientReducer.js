@@ -1,11 +1,18 @@
-import { SET_APP_LOADING } from '../actions/types';
+import { LOGIN, LOGOUT } from '../actions/types';
 
 const initState = {};
 
 const clientReducer = (state = initState, action) => {
   switch (action.type) {
-    case SET_APP_LOADING:
-      return action.payload;
+    case LOGIN:
+      return {
+        ...action.payload
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        ...action.payload
+      };
     default:
       return state;
   }

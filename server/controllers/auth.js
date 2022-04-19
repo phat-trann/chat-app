@@ -12,7 +12,7 @@ const client = StreamChat.getInstance(api_key, api_secret);
 
 const signup = async (req, res) => {
   try {
-    const { fullName, userName, password, phoneNumber } = req.body;
+    const { userName, password, phoneNumber } = req.body;
     const { users } = await client.queryUsers({ name: userName });
 
     if (users.length > 0) return res.status(200).json({ error: true, message: 'This user name already exits' });
@@ -22,7 +22,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = serverClient.createUserToken(userID);
 
-    res.status(200).json({ token, fullName, userName, userID, hashedPassword, phoneNumber });
+    res.status(200).json({ token, userName, userID, hashedPassword, phoneNumber });
   } catch (err) {
     console.log(err);
 
@@ -45,7 +45,7 @@ const login = async (req, res) => {
     const token = serverClient.createUserToken(users[0].id);
 
     if (success) {
-      res.status(200).json({ token, fullName: users[0].fullName, userName, userID: users[0].id });
+      res.status(200).json({ token, fullName: users[0].userName, userID: users[0].id, hashedPassword: users[0].hashedPassword });
     } else {
       res.status(200).json({ error: true, message: 'Incorrect password' });
     }

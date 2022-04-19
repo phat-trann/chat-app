@@ -1,12 +1,11 @@
 import React from 'react';
-import { Avatar, ChannelList, useChatContext } from 'stream-chat-react';
-import Cookies from 'universal-cookie';
+import { Avatar, ChannelList } from 'stream-chat-react';
 
 import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 
 import { IoIosHome, IoIosLogOut } from 'react-icons/io';
-
-const cookies = new Cookies();
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../actions';
 
 const SideBar = ({ handleLogout, client }) => (
   <div className="channel-list__sidebar">
@@ -49,19 +48,14 @@ const ChannelListContainer = ({
   setCreateType,
   setIsCreating
 }) => {
+  const clientResults = useSelector((state) => state.client);
+  const dispatch = useDispatch();
+  const client = clientResults.client;
+  const filter = { members: { $in: [clientResults.userID] } };
+
   const handleLogout = () => {
-    cookies.remove('token');
-    cookies.remove('userID');
-    cookies.remove('userName');
-    cookies.remove('avatarURL');
-    cookies.remove('phoneNumber');
-    cookies.remove('hashedPassword');
-
-    window.location.reload();
+    dispatch(logout(client))
   }
-
-  const { client } = useChatContext();
-  const filter = { members: { $in: [client.userID] } };
 
   return (
     <>

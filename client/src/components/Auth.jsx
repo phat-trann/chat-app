@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'universal-cookie';
 import axios from 'axios';
 import { MdError } from 'react-icons/md';
-
-const cookies = new Cookies();
+import { login } from '../actions';
+import { useDispatch } from 'react-redux';
 
 const initialForm = {
   userName: '',
@@ -13,10 +12,11 @@ const initialForm = {
   avatarURL: ''
 }
 
-const Auth = () => {
+const Auth = ({ client }) => {
   const [form, setForm] = useState(initialForm);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const dispatch = useDispatch();
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -30,8 +30,7 @@ const Auth = () => {
       if (Object.values(form).some(el => !el)) {
         setErrorMessage('Some fields is missing!');
         return;
-      }
-      else if (form.password !== form.confirmPassword) {
+      } else if (form.password !== form.confirmPassword) {
         setErrorMessage('Password do NOT match!');
         return;
       }
@@ -48,25 +47,11 @@ const Auth = () => {
       return;
     }
 
-    cookies.set('token', token);
-    cookies.set('userName', userName);
-    cookies.set('userID', userID);
-
-    if (isSignUp) {
-      cookies.set('phoneNumber', phoneNumber);
-      cookies.set('avatarURL', avatarURL);
-      cookies.set('hashedPassword', hashedPassword);
-    }
-
-    window.location.reload();
+    dispatch(login({ token, userID, userName, hashedPassword, client }));
   }
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  const switchMode = () => {
-    setIsSignUp(pre => !pre);
   }
 
   useEffect(() => {
@@ -85,7 +70,7 @@ const Auth = () => {
     return () => {
       clearTimeout(timeOut);
     }
-  });
+  }, [errorMessage]);
 
   return (
     <div className="auth__form-container">
@@ -175,7 +160,7 @@ const Auth = () => {
                   'Already have an account?' :
                   'Don\'t have an account?'
               }
-              <span onClick={switchMode}>
+              <span onClick={_ => setIsSignUp(pre => !pre)}>
                 {
                   isSignUp ? 'Sign In' : 'Sign up'
                 }

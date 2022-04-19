@@ -1,1 +1,2 @@
-export const SET_APP_LOADING = 'SET_APP_LOADING';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';

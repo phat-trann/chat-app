@@ -1,1 +1,1 @@
-export { default as clientAction } from './clientAction';
+export { login, logout } from './clientAction';

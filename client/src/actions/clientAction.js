@@ -2,31 +2,72 @@ import Cookies from 'universal-cookie';
 import { StreamChat } from 'stream-chat';
 import axios from 'axios';
 
-import { SET_APP_LOADING } from './types';
+import { LOGIN, LOGOUT } from './types';
 
-const clientAction = () => {
+const cookies = new Cookies();
+
+const login = ({ token, userID, userName, hashedPassword, client: currentClient }) => {
   return async (dispatch) => {
-    const cookies = new Cookies();
-    const URL = `${process.env.REACT_APP_HOST}/key`;
-    const { data: { apiKey } } = await axios.get(URL);
-    const authToken = cookies.get('token');
-    const client = await StreamChat.getInstance(apiKey);
-  
+    let client;
+
+    if (token &&
+      userID &&
+      userName &&
+      hashedPassword &&
+      currentClient
+    ) {
+      cookies.set('token', token);
+      cookies.set('userName', userName);
+      cookies.set('userID', userID);
+      cookies.set('hashedPassword', hashedPassword);
+      client = currentClient;
+    } else {
+      const URL = `${process.env.REACT_APP_HOST}/key`;
+      const { data: { apiKey } } = await axios.get(URL);
+      client = await StreamChat.getInstance(apiKey);
+    }
+
+    const authToken = token || cookies.get('token');
+
     if (authToken) {
       await client.connectUser({
-        id: cookies.get('userID'),
-        name: cookies.get('userName'),
-        image: cookies.get('avatarURL'),
-        phoneNumber: cookies.get('phoneNumber'),
-        hashedPassword: cookies.get('hashedPassword')
+        id: userID || cookies.get('userID'),
+        name: userName || cookies.get('userName'),
+        hashedPassword: hashedPassword || cookies.get('hashedPassword')
       }, authToken);
     }
-  
+
     dispatch({
-      type: SET_APP_LOADING,
-      payload: client
+      type: LOGIN,
+      payload: {
+        client,
+        userID: client.userID
+      }
     });
   }
 }
 
-export default clientAction;
+const logout = (client) => {
+  return async (dispatch) => {
+    cookies.remove('token');
+    cookies.remove('userID');
+    cookies.remove('userName');
+    cookies.remove('avatarURL');
+    cookies.remove('phoneNumber');
+    cookies.remove('hashedPassword');
+
+    await client.disconnectUser();
+
+    dispatch({
+      type: LOGOUT,
+      payload: {
+        userID: null
+      }
+    })
+  }
+}
+
+export {
+  login,
+  logout
+};
