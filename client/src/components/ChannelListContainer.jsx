@@ -57,7 +57,7 @@ const ChannelListContainer = () => {
   const filter = { members: { $in: [clientResults.userID] } };
 
   const handleLogout = () => {
-    dispatch(logout(client))
+    dispatch(logout(client));
   }
 
   return (

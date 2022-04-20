@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { MdError } from 'react-icons/md';
-import { login } from '../actions';
+import { changeStatus, changeType, login } from '../actions';
 import { useDispatch } from 'react-redux';
+import { RESET_STATUS } from '../actions/types';
 
 const initialForm = {
   userName: '',
@@ -48,6 +49,8 @@ const Auth = ({ client }) => {
     }
 
     dispatch(login({ token, userID, userName, hashedPassword, client }));
+    dispatch(changeType(''));
+    dispatch(changeStatus(RESET_STATUS));
   }
 
   const handleChange = (e) => {
