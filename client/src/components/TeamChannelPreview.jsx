@@ -23,7 +23,6 @@ const TeamChannelPreview = ({ channel, type }) => {
   }, [channel, activeChannel, setActiveChannel, notification, client]);
 
   const handleSelectChannel = () => {
-    console.log(channel)
     setActiveChannel(channel);
     dispatch(changeStatus(RESET_STATUS));
     dispatch(changeType(''));

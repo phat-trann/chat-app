@@ -53,6 +53,8 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
   const [message, setMessage] = useState('Loading');
 
   useEffect(() => {
+    let isWillUnMount = false;
+
     (async () => {
       let existedUsers = [];
 
@@ -64,7 +66,7 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
             { limit: 8 }
           )
 
-          if (response?.members?.length) {
+          if (response?.members?.length && !isWillUnMount) {
             existedUsers = response.members.map(el => el.user_id);
           }
         }
@@ -77,6 +79,9 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
           { id: 1 },
           { limit: 8 }
         )
+
+        if (isWillUnMount) return;
+
         if (response?.users.length) {
           setUsers(response.users);
           setMessage(null);
@@ -87,6 +92,8 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
         setMessage('Error loading, please refresh this page and try again.');
       }
     })();
+
+    return () => isWillUnMount = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
