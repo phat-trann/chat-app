@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Avatar, useChatContext } from 'stream-chat-react';
+import { changeStatus, changeType } from '../actions';
+import { RESET_STATUS } from '../actions/types';
 
 const TeamChannelPreview = ({ channel, type }) => {
   const { channel: activeChannel, client, setActiveChannel } = useChatContext();
+  const [notification, setNotification] = useState(channel?.state?.unreadCount || 0);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const addNotification = () => {
+      setNotification(channel?.state?.unreadCount);
+    };
+
+    channel.on('all', addNotification);
+    return () => {
+      channel.off('all', addNotification);
+    };
+  }, [channel, notification, client]);
+
+  const handleSelectChannel = () => {
+    console.log(channel)
+    setActiveChannel(channel);
+    dispatch(changeStatus(RESET_STATUS));
+    dispatch(changeType(''));
+  }
+
   const ChannelPreview = () => (
     <p className="channel-preview__item">
       # {channel?.data?.name || channel?.data?.id}
@@ -26,8 +50,11 @@ const TeamChannelPreview = ({ channel, type }) => {
 
   return (
     <div className={`channel-preview__wrapper${(channel?.id === activeChannel?.id) ? '__selected' : ''}`}
-      onClick={() => setActiveChannel(channel)}>
+      onClick={handleSelectChannel}>
       {type === 'team' ? <ChannelPreview /> : <DirectPreview />}
+      <div className='channel-notification'>
+        {notification > 0 ? notification : ''}
+      </div>
     </div>
   )
 }
