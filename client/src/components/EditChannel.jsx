@@ -18,7 +18,7 @@ const ChannelNameInput = ({ channelName = '', setChannelName }) => {
     <div className="channel-name-input__wrapper">
       <p>Name</p>
       <input value={channelName} onChange={handleChange} placeholder="change-name" />
-      <p>Add Member</p>
+      <p>Member</p>
     </div>
   )
 }
@@ -57,6 +57,7 @@ const EditChannel = () => {
         <AiOutlineCloseCircle onClick={handleCloseCreate}/>
       </div>
       <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />
+      <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel} isShowExisted={true}/>
       <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel}/>
       <div className="edit-channel__button-wrapper" onClick={updateChannel}>
         <p>Save changes</p>

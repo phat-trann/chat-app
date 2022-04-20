@@ -1854,6 +1854,10 @@ div.rta__autocomplete.str-chat__emojisearch {
     }
 }
 
+.team-channel-remove {
+    cursor: pointer;
+}
+
 @media screen and (max-width: 650px) {
     .channerl-list__container-toggle {
         right: -3%;

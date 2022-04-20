@@ -10,6 +10,8 @@ const TeamChannelPreview = ({ channel, type }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!activeChannel) setActiveChannel(channel);
+
     const addNotification = () => {
       setNotification(channel?.state?.unreadCount);
     };
@@ -18,7 +20,7 @@ const TeamChannelPreview = ({ channel, type }) => {
     return () => {
       channel.off('all', addNotification);
     };
-  }, [channel, notification, client]);
+  }, [channel, activeChannel, setActiveChannel, notification, client]);
 
   const handleSelectChannel = () => {
     console.log(channel)

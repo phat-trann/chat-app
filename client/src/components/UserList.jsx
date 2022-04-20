@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
-import { ImCheckboxChecked, ImCheckboxUnchecked} from 'react-icons/im';
+import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
 
-const ListContainer = ({ children }) => {
+const ListContainer = ({ children, isShowExisted }) => {
   return (
     <div className="user-list__container">
       <div className="user-list__header">
-        <p>User</p>
-        <p>Invite</p>
+        <p>{isShowExisted ? 'Current User(s)' : 'Available User(s)'}</p>
+        <p>{isShowExisted ? '' : 'Invite'}</p>
       </div>
       {children}
     </div>
   )
 }
 
-const UserItem = ({ user, setSelectedUsers }) => {
+const UserItem = ({ user, setSelectedUsers, isShowExisted }) => {
   const [invited, setInvited] = useState(false);
 
   const handleInvited = () => {
@@ -32,21 +32,22 @@ const UserItem = ({ user, setSelectedUsers }) => {
   }
 
   return (
-    <div className="user-item__wrapper" onClick={handleInvited}>
+    <div className="user-item__wrapper" onClick={isShowExisted ? () => { } : handleInvited}>
       <div className="user-item__name-wrapper">
         <Avatar image={user.image} name={user.name} size={32} />
         <p className="user-item__name">{user.name}</p>
       </div>
       {
-        invited ?
-          <ImCheckboxChecked /> :
-          <ImCheckboxUnchecked />
+        isShowExisted ? '' :
+          (invited ?
+            <ImCheckboxChecked /> :
+            <ImCheckboxUnchecked />)
       }
     </div>
   )
 }
 
-const UserList = ({ setSelectedUsers, currentChannel = null }) => {
+const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = false }) => {
   const { client } = useChatContext();
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState('Loading');
@@ -68,8 +69,11 @@ const UserList = ({ setSelectedUsers, currentChannel = null }) => {
           }
         }
 
+        const existedList = [...existedUsers, client.userID]
+        const query = isShowExisted ? { $in: existedList } : { $nin: existedList };
+
         const response = await client.queryUsers(
-          { id: { $nin: [...existedUsers, client.userID] }, role: { $ne: 'admin' } },
+          { id: query, role: { $ne: 'admin' } },
           { id: 1 },
           { limit: 8 }
         )
@@ -87,14 +91,14 @@ const UserList = ({ setSelectedUsers, currentChannel = null }) => {
   }, []);
 
   return (
-    <ListContainer>
+    <ListContainer isShowExisted={isShowExisted}>
       {(message) ? (
         <div className="user-list__message">
           {message}
         </div>
       ) : (
         users?.map((user, i) => {
-          return <UserItem index={i} key={user.id} user={user} setSelectedUsers={setSelectedUsers} />
+          return <UserItem index={i} key={user.id} user={user} setSelectedUsers={setSelectedUsers} isShowExisted={isShowExisted} />
         })
       )}
     </ListContainer>
