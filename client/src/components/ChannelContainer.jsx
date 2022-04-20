@@ -2,13 +2,18 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Channel, MessageSimple } from 'stream-chat-react';
 
-import { STATUS_CREATING } from '../actions/types';
-import { ChannelInner, CreateChannel, EditChannel } from './';
+import { STATUS_CREATING, STATUS_EDIT_PROFILE } from '../actions/types';
+import { ChannelInner, CreateChannel, EditChannel, EditProfile } from './';
 
 const ChannelContainer = () => {
   const status = useSelector(state => state.status);
 
   if (status) {
+    if (status === STATUS_EDIT_PROFILE) {
+      return <div className="channel__container">
+          <EditProfile />
+      </div>
+    }
     return (
       <div className="channel__container">
         {status === STATUS_CREATING ?

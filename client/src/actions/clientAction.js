@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 import { StreamChat } from 'stream-chat';
 import axios from 'axios';
 
-import { LOGIN, LOGOUT } from './types';
+import { LOGIN, LOGOUT, UPDATE_PROFILE } from './types';
 
 const cookies = new Cookies();
 
@@ -67,7 +67,18 @@ const logout = (client) => {
   }
 }
 
+const update = (client, newImage) => {
+  return ({
+    type: UPDATE_PROFILE,
+    payload: {
+      userID: client.userID,
+      newImage
+    }
+  })
+}
+
 export {
   login,
-  logout
+  logout,
+  update
 };

@@ -5,26 +5,34 @@ import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 
 import { IoIosHome, IoIosLogOut } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../actions';
+import { changeStatus, logout } from '../actions';
+import { STATUS_EDIT_PROFILE } from '../actions/types';
 
-const SideBar = ({ handleLogout, client }) => (
-  <div className="channel-list__sidebar">
-    <div className="channel-list__sidebar__home">
-      <div className="icon__inner">
-        {
-          client?.user ?
-            <Avatar image={client.user.image} name={client.user.name} size={44} /> :
-            <IoIosHome />
-        }
+const SideBar = ({ handleLogout, client }) => {
+  const dispatch = useDispatch();
+  const image = useSelector(state => state.client.newImage);
+
+  return (
+    <div className="channel-list__sidebar">
+      <div className="channel-list__sidebar__home">
+        <div className="icon__inner" >
+          {
+            client?.user ?
+              <Avatar image={image || client.user.image} name={client.user.name} size={44} onClick={() => {
+                dispatch(changeStatus(STATUS_EDIT_PROFILE));
+              }}/> :
+              <IoIosHome />
+          }
+        </div>
+      </div>
+      <div className="channel-list__sidebar__logout">
+        <div className="icon__inner" onClick={handleLogout}>
+          <IoIosLogOut />
+        </div>
       </div>
     </div>
-    <div className="channel-list__sidebar__logout">
-      <div className="icon__inner" onClick={handleLogout}>
-        <IoIosLogOut />
-      </div>
-    </div>
-  </div>
-)
+  )
+}
 
 const CompanyHeader = () => (
   <div className="channel-list__header">

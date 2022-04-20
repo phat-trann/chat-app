@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT } from '../actions/types';
+import { LOGIN, LOGOUT, UPDATE_PROFILE } from '../actions/types';
 
 const initState = {};
 
@@ -9,6 +9,11 @@ const clientReducer = (state = initState, action) => {
         ...action.payload
       };
     case LOGOUT:
+      return {
+        ...state,
+        ...action.payload
+      };
+    case UPDATE_PROFILE:
       return {
         ...state,
         ...action.payload
