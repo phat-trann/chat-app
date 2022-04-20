@@ -14,3 +14,4 @@
 - npm install axios
 - npm install redux react-redux
 - npm install @redux-devtools/extension -save-dev
+- npm install env-cmd -save-dev
