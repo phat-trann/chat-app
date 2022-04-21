@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { changeStatus, changeType, login } from '../actions';
 import { useDispatch } from 'react-redux';
@@ -18,6 +18,7 @@ const Auth = ({ client }) => {
   const [formError, setFormError] = useState(initialForm);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const userNameRef = useRef();
   const dispatch = useDispatch();
 
   const handleSubmitForm = async (e) => {
@@ -116,11 +117,19 @@ const Auth = ({ client }) => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box>
-        <Typography component="h1" variant="h5">
+      <Box sx={{
+        paddingTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+        <Typography component="h1" variant="h3" sx={{ width: '100%', mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+          FERB<FormLabel sx={{ fontSize: '0.75em' }}>ooK</FormLabel>
+        </Typography>
+        <Typography component="h1" variant="h5" sx={{ width: '100%' }}>
           {isSignUp ? 'Sign up' : 'Sign in'}
         </Typography>
-        <Box component="form" onSubmit={handleSubmitForm} noValidate autoComplete="off">
+        <Box component="form" onSubmit={handleSubmitForm} noValidate sx={{ mt: 1 }} autoComplete="off">
           <TextField
             margin="dense"
             required
@@ -132,6 +141,8 @@ const Auth = ({ client }) => {
             value={form.userName}
             error={!!formError.userName}
             helperText={formError.userName}
+            inputRef={userNameRef}
+            sx={{ background: 'white' }}
           />
           {isSignUp && (
             <TextField
@@ -147,6 +158,7 @@ const Auth = ({ client }) => {
               inputProps={{
                 maxLength: 10
               }}
+              sx={{ background: 'white' }}
             />
           )}
           {isSignUp && (
@@ -160,6 +172,7 @@ const Auth = ({ client }) => {
               error={!!formError.avatarURL}
               helperText={formError.avatarURL}
               maxLength={10}
+              sx={{ background: 'white' }}
             />
           )}
           <TextField
@@ -173,6 +186,7 @@ const Auth = ({ client }) => {
             value={form.password}
             error={!!formError.password}
             helperText={formError.password}
+            sx={{ background: 'white' }}
           />
           {isSignUp && (
             <TextField
@@ -186,6 +200,7 @@ const Auth = ({ client }) => {
               value={form.confirmPassword}
               error={!!formError.confirmPassword}
               helperText={formError.confirmPassword}
+              sx={{ background: 'white' }}
             />
           )}
           <Button
@@ -193,6 +208,7 @@ const Auth = ({ client }) => {
             variant="contained"
             type="submit"
             size="large"
+            sx={{ mt: 3, mb: 2 }}
           >
             {isSignUp ? 'Sign up' : 'Sign in'}
           </Button>
@@ -207,6 +223,7 @@ const Auth = ({ client }) => {
             e.preventDefault();
             setFormError(initialForm);
             setIsSignUp(pre => !pre);
+            userNameRef.current.focus();
           }}>
             {
               isSignUp ? 'Sign In' : 'Sign up'
