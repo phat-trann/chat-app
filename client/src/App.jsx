@@ -42,7 +42,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="100vw" disableGutters sx={{ minHeight: '100vh', backgroundColor: '#f5f7fb' }}>
+      <Container maxWidth="100vw" disableGutters sx={{ minHeight: '100vh', backgroundColor: '#ededed' }}>
         {(status === STATUS_LOADING) ?
           (<Box sx={{ display: 'flex', minHeight: '100vh', minWidth: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <CircularProgress />

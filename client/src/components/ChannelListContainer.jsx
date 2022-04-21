@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, ChannelList } from 'stream-chat-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Grid } from '@mui/material';
+import { Box, Container, Divider, Grid } from '@mui/material';
 
 import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 
@@ -16,6 +16,21 @@ const customChannelMessageFilter = (channels) => {
   return channels.filter(channel => channel.type === 'messaging');
 }
 
+const customStyle = {
+  width: '100%',
+  bgcolor: 'background.paper',
+  borderRadius: '25px',
+  pb: 1,
+  pr: 1,
+  pl: 1,
+  '& .str-chat-channel-list': {
+    float: 'none',
+    mt: 2,
+    mb: 1,
+    borderRadius: '50px'
+  }
+}
+
 const ChannelListContainer = () => {
   const clientResults = useSelector((state) => state.client);
   const image = useSelector(state => state.client.newImage);
@@ -24,7 +39,7 @@ const ChannelListContainer = () => {
   const filter = { members: { $in: [clientResults.userID] } };
 
   return (
-    <Container sx={{ background: '#005fff', height: '100vh' }}>
+    <Container sx={{ height: '100vh' }}>
       <Grid container spacing={2} sx={{ padding: 1, alignItems: 'center', pt: 2, pb: 2 }}>
         <Grid item xs={2} sx={{ '& div': { cursor: 'pointer' } }}>
           <Avatar image={image || client.user.image} size={44} onClick={() => {
@@ -35,38 +50,43 @@ const ChannelListContainer = () => {
           <ChannelSearch />
         </Grid>
       </Grid>
-      <ChannelList
-        filters={filter}
-        channelRenderFilterFn={customChannelTeamFilter}
-        List={(listProps) => (
-          <TeamChannelList
-            {...listProps}
-            type="team"
-          />
-        )}
-        Preview={(previewProps) => (
-          <TeamChannelPreview
-            {...previewProps}
-            type="team"
-          />
-        )}
-      />
-      <ChannelList
-        filters={filter}
-        channelRenderFilterFn={customChannelMessageFilter}
-        List={(listProps) => (
-          <TeamChannelList
-            {...listProps}
-            type="messaging"
-          />
-        )}
-        Preview={(previewProps) => (
-          <TeamChannelPreview
-            {...previewProps}
-            type="messaging"
-          />
-        )}
-      />
+      <Divider />
+      <Box sx={customStyle}>
+        <ChannelList
+          filters={filter}
+          channelRenderFilterFn={customChannelTeamFilter}
+          List={(listProps) => (
+            <TeamChannelList
+              {...listProps}
+              type="team"
+            />
+          )}
+          Preview={(previewProps) => (
+            <TeamChannelPreview
+              {...previewProps}
+              type="team"
+            />
+          )}
+        />
+      </Box>
+      <Box sx={customStyle}>
+        <ChannelList
+          filters={filter}
+          channelRenderFilterFn={customChannelMessageFilter}
+          List={(listProps) => (
+            <TeamChannelList
+              {...listProps}
+              type="messaging"
+            />
+          )}
+          Preview={(previewProps) => (
+            <TeamChannelPreview
+              {...previewProps}
+              type="messaging"
+            />
+          )}
+        />
+      </Box>
     </Container>
   )
 }

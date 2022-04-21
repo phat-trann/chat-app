@@ -1,3 +1,4 @@
+import { ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Skeleton, List, Grid, Divider } from '@mui/material';
 import React from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,42 +25,54 @@ const AddChannel = ({ type }) => {
   )
 };
 
+const Loading = () => (<ListItem disablePadding>
+  <ListItemButton>
+    <ListItemIcon>
+      <Skeleton variant="circular" width={24} height={24} />
+    </ListItemIcon>
+    <ListItemText primary={
+      <Skeleton variant="text" width="100%" height={24} />
+    } />
+  </ListItemButton>
+</ListItem>);
+
+const NotFound = () => (<ListItem disablePadding>
+  <ListItemButton>
+    <ListItemIcon>
+    </ListItemIcon>
+    <ListItemText primary={
+      <i>Connection error</i>
+    } />
+  </ListItemButton>
+</ListItem>)
+
 const TeamChannelList = ({
   children,
   error = false,
   loading, type,
 }) => {
-  if (error) {
-    return type === 'team' ? (
-      <div className="team-channel-list">
-        <p className="team-channel-list__message">
-          Connection error, please wait a moment and try again.
-        </p>
-      </div>
-    ) : null;
-  }
-
-  if (loading) {
-    return (
-      <div className="team-channel-list">
-        <p className="team-channel-list__message loading">
-          {type === 'team' ? 'Channels' : 'Messages'} loading...
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="team-channel-list">
-      <div className="team-channel-list__header">
-        <p className="team-channel-list__header__title">
-          {type === 'team' ? 'Channels' : 'Direct Messages'}
-        </p>
-        <AddChannel type={type || ''}
-        />
-      </div>
-      {children}
-    </div>
+    <List subheader={
+      <ListSubheader component="div" id={`${type}-preview-subheader`} sx={{ borderRadius: '25px' }}>
+        <>
+          <Grid container>
+            <Grid item xs={11}>
+              {type === 'team' ? 'Channels' : 'Direct Messages'}
+            </Grid>
+            <Grid item xs={1}>
+              <AddChannel type={type || ''} />
+            </Grid>
+          </Grid>
+          <Divider />
+        </>
+      </ListSubheader>
+    }>
+      {
+        error ? <NotFound /> : (
+          loading ? <Loading /> : children
+        )
+      }
+    </List>
   )
 }
 

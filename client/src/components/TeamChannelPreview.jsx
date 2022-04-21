@@ -1,8 +1,11 @@
+import { Badge, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Avatar, useChatContext } from 'stream-chat-react';
-import { changeStatus, changeType } from '../actions';
+import { Mail } from '@mui/icons-material';
+
 import { RESET_STATUS } from '../actions/types';
+import { changeStatus, changeType } from '../actions';
 
 const TeamChannelPreview = ({ channel, type }) => {
   const { channel: activeChannel, client, setActiveChannel } = useChatContext();
@@ -29,34 +32,44 @@ const TeamChannelPreview = ({ channel, type }) => {
   }
 
   const ChannelPreview = () => (
-    <p className="channel-preview__item">
-      # {channel?.data?.name || channel?.data?.id}
-    </p>
+    <>
+      <ListItemIcon>
+        #
+      </ListItemIcon>
+      <ListItemText primary={channel.data.name} />
+    </>
   )
 
   const DirectPreview = () => {
     const members = Object.values(channel.state.members).filter(({ user }) => user.id !== client.userID);
 
     return (
-      <div className="channel-preview__item single">
-        <Avatar
-          image={members[0]?.user?.image}
-          name={members[0]?.user?.name}
-          size={24}
-        />
-        <p>{`${members[0]?.user?.name || members[0]?.user?.id}${members[1]?.user?.name ? ', ...' : ''}`}</p>
-      </div>
+      <>
+        <ListItemIcon>
+          <Avatar
+            image={members[0]?.user?.image}
+            name={members[0]?.user?.name}
+            size={24}
+          />
+        </ListItemIcon>
+        <ListItemText primary={`${members[0]?.user?.name || members[0]?.user?.id}${members[1]?.user?.name ? ', ...' : ''}`} />
+      </>
     )
   }
 
   return (
-    <div className={`channel-preview__wrapper${(channel?.id === activeChannel?.id) ? '__selected' : ''}`}
-      onClick={handleSelectChannel}>
-      {type === 'team' ? <ChannelPreview /> : <DirectPreview />}
-      <div className='channel-notification'>
-        {notification > 0 ? notification : ''}
-      </div>
-    </div>
+    <ListItem disablePadding onClick={handleSelectChannel} secondaryAction={
+      (notification > 0) ?
+        (<IconButton edge="end" aria-label="delete">
+          <Badge badgeContent={notification} max={9} color="primary">
+            <Mail color="action" />
+          </Badge>
+        </IconButton>) : ''
+    }>
+      <ListItemButton selected={(channel?.id === activeChannel?.id)}>
+        {type === 'team' ? <ChannelPreview /> : <DirectPreview />}
+      </ListItemButton>
+    </ListItem>
   )
 }
 
