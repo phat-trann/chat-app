@@ -1,8 +1,8 @@
-import { STATUS_CREATING, STATUS_EDITING, RESET_STATUS, STATUS_EDIT_PROFILE } from '../actions/types';
+import { STATUS_CREATING, STATUS_EDITING, RESET_STATUS, STATUS_EDIT_PROFILE, STATUS_LOADING } from '../actions/types';
 
 const initialState = '';
 
-const clientReducer = (state = initialState, action) => {
+const clientReducer = (state = STATUS_LOADING, action) => {
   switch (action.type) {
     case STATUS_CREATING:
       return STATUS_CREATING;
@@ -10,6 +10,8 @@ const clientReducer = (state = initialState, action) => {
       return STATUS_EDITING;
     case STATUS_EDIT_PROFILE:
       return STATUS_EDIT_PROFILE;
+      case STATUS_LOADING:
+        return STATUS_LOADING;
     case RESET_STATUS:
       return initialState;
     default:

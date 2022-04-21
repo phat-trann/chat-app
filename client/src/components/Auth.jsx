@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { changeStatus, changeType, login } from '../actions';
 import { useDispatch } from 'react-redux';
-import { RESET_STATUS } from '../actions/types';
+import { RESET_STATUS, STATUS_LOADING } from '../actions/types';
 import { Box, Button, Container, TextField, Typography, FormLabel, Link } from '@mui/material';
 
 const initialForm = {
@@ -79,18 +79,21 @@ const Auth = ({ client }) => {
 
     const { userName, password, phoneNumber, avatarURL } = form;
     const URL = `${process.env.REACT_APP_HOST}/auth`;
-    const { data: { token, userID, userPhoneNumber, hashedPassword, error, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+    const { data: { token, userID, userPhoneNumber, hashedPassword, error, errorType, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
       userName, password, phoneNumber, avatarURL
     });
 
-    if (error) {
-      setErrorMessage(message);
+    if (error && errorType && message) {
+      setFormError({
+        ...resetFormError,
+        [errorType]: message
+      });
       return;
     }
 
     dispatch(login({ token, userID, userName, userPhoneNumber, hashedPassword, client }));
     dispatch(changeType(''));
-    dispatch(changeStatus(RESET_STATUS));
+    dispatch(changeStatus(STATUS_LOADING));
   }
 
   const handleChange = (e) => {
@@ -142,7 +145,6 @@ const Auth = ({ client }) => {
             error={!!formError.userName}
             helperText={formError.userName}
             inputRef={userNameRef}
-            sx={{ background: 'white' }}
           />
           {isSignUp && (
             <TextField
@@ -158,7 +160,6 @@ const Auth = ({ client }) => {
               inputProps={{
                 maxLength: 10
               }}
-              sx={{ background: 'white' }}
             />
           )}
           {isSignUp && (
@@ -172,7 +173,6 @@ const Auth = ({ client }) => {
               error={!!formError.avatarURL}
               helperText={formError.avatarURL}
               maxLength={10}
-              sx={{ background: 'white' }}
             />
           )}
           <TextField
@@ -186,7 +186,6 @@ const Auth = ({ client }) => {
             value={form.password}
             error={!!formError.password}
             helperText={formError.password}
-            sx={{ background: 'white' }}
           />
           {isSignUp && (
             <TextField
@@ -200,7 +199,6 @@ const Auth = ({ client }) => {
               value={form.confirmPassword}
               error={!!formError.confirmPassword}
               helperText={formError.confirmPassword}
-              sx={{ background: 'white' }}
             />
           )}
           <Button

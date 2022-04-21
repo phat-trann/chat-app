@@ -6,7 +6,7 @@ import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 import { IoIosHome, IoIosLogOut } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeStatus, logout } from '../actions';
-import { STATUS_EDIT_PROFILE } from '../actions/types';
+import { STATUS_EDIT_PROFILE, STATUS_LOADING } from '../actions/types';
 
 const SideBar = ({ handleLogout, client }) => {
   const dispatch = useDispatch();
@@ -57,6 +57,7 @@ const ChannelListContainer = () => {
   const filter = { members: { $in: [clientResults.userID] } };
 
   const handleLogout = () => {
+    dispatch(changeStatus(STATUS_LOADING));
     dispatch(logout(client));
   }
 

@@ -44,7 +44,8 @@ const login = ({ token, userID, userName, userPhoneNumber, hashedPassword, clien
       type: LOGIN,
       payload: {
         client,
-        userID: client.userID
+        userID: client.userID,
+        authToken: authToken
       }
     });
   }
@@ -63,7 +64,8 @@ const logout = (client) => {
     dispatch({
       type: LOGOUT,
       payload: {
-        userID: null
+        userID: null,
+        authToken: null
       }
     })
   }

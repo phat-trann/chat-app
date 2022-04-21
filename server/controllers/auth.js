@@ -15,7 +15,7 @@ const signup = async (req, res) => {
     const { userName, password, phoneNumber } = req.body;
     const { users } = await client.queryUsers({ name: userName });
 
-    if (users.length > 0) return res.status(200).json({ error: true, message: 'This user name already exits' });
+    if (users.length > 0) return res.status(200).json({ error: true, errorType: 'userName', message: 'This user name already exits' });
 
     const userID = crypto.randomBytes(16).toString('hex');
     const serverClient = connect(api_key, api_secret, app_id);
@@ -39,7 +39,7 @@ const login = async (req, res) => {
     const serverClient = connect(api_key, api_secret, app_id);
     const { users } = await client.queryUsers({ name: userName });
 
-    if (!users.length) return res.status(200).json({ error: true, message: 'User not found' });
+    if (!users.length) return res.status(200).json({ error: true, errorType: 'userName', message: 'User not found' });
 
     const success = await bcrypt.compare(password, users[0].hashedPassword);
     const token = serverClient.createUserToken(users[0].id);
@@ -53,7 +53,7 @@ const login = async (req, res) => {
         hashedPassword: users[0].hashedPassword
       });
     } else {
-      res.status(200).json({ error: true, message: 'Incorrect password' });
+      res.status(200).json({ error: true, errorType: 'password', message: 'Incorrect password' });
     }
   } catch (err) {
     console.log(err);
