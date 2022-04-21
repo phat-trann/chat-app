@@ -50,7 +50,7 @@ const App = () => {
           (!clientResults?.userID ?
             <Auth client={clientResults?.client} /> :
             (<Chat client={clientResults?.client} theme="team light">
-              <Grid maxWidth="xl" container spacing={0} sx={{ margin: 'auto' }}>
+              <Grid maxWidth="lg" container spacing={0} sx={{ margin: 'auto' }}>
                 <Grid item xs={6} md={4}>
                   <ChannelListContainer />
                 </Grid>

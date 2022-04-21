@@ -1,3 +1,4 @@
+import { Box, ListItem, ListItemButton, ListItemIcon, ListItemText, Skeleton, List, Divider, ListSubheader } from '@mui/material';
 import React from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
 
@@ -19,85 +20,107 @@ const channelByUser = async ({ client, setActiveChannel, channel, setChannel }) 
   return setActiveChannel(newChannel);
 };
 
-const SearchResult = ({ channel, focusedId, type, setChannel }) => {
+const SearchResult = ({ channel, type, setChannel }) => {
   const { client, setActiveChannel } = useChatContext();
 
   if (type === 'channel') {
     return (
-      <div
-        onClick={() => {
+      <ListItem disablePadding>
+        <ListItemButton onClick={() => {
           setChannel(channel)
-        }}
-        className={focusedId === channel.id ? 'channel-search__result-container__focused' : 'channel-search__result-container'}
-      >
-        <div className="result-hashtag">#</div>
-        <p className="channel-search__result-text">{channel.data.name}</p>
-      </div>
+        }}>
+          <ListItemIcon>
+            #
+          </ListItemIcon>
+          <ListItemText primary={channel.data.name} />
+        </ListItemButton>
+      </ListItem>
     );
   }
 
   return (
-    <div
-      onClick={async () => {
+    <ListItem disablePadding>
+      <ListItemButton onClick={async () => {
         channelByUser({ client, setActiveChannel, channel, setChannel })
-      }}
-      className={focusedId === channel.id ? 'channel-search__result-container__focused' : 'channel-search__result-container'}
-    >
-      <div className="channel-search__result-user">
-        <Avatar image={channel.image || undefined} name={channel.name} size={24} />
-        <p className="channel-search__result-text">{channel.name}</p>
-      </div>
-    </div>
+      }}>
+        <ListItemIcon>
+          <Avatar image={channel.image || undefined} size={24} />
+        </ListItemIcon>
+        <ListItemText primary={channel.name} />
+      </ListItemButton>
+    </ListItem>
   );
 };
 
-const ResultsDropdown = ({ teamChannels, directChannels, focusedId, loading, setChannel }) => {
+const SearchLoading = () => (<ListItem disablePadding>
+  <ListItemButton>
+    <ListItemIcon>
+      <Skeleton variant="circular" width={24} height={24} />
+    </ListItemIcon>
+    <ListItemText primary={
+      <Skeleton variant="text" width="100%" height={24} />
+    } />
+  </ListItemButton>
+</ListItem>);
 
+const NotFound = ({ name }) => (<ListItem disablePadding>
+  <ListItemButton>
+    <ListItemIcon>
+    </ListItemIcon>
+    <ListItemText primary={
+      <i>{`Not ${name} found`}</i>
+    } />
+  </ListItemButton>
+</ListItem>)
+
+const ResultsDropdown = ({ teamChannels, directChannels, loading, setChannel }) => {
   return (
-    <div className="channel-search__results">
-      <p className="channel-search__results-header">Channels</p>
-      {loading && !teamChannels.length && (
-        <p className="channel-search__results-header">
-          <i>Loading...</i>
-        </p>
-      )}
-      {!loading && !teamChannels.length ? (
-        <p className="channel-search__results-header">
-          <i>No channels found</i>
-        </p>
-      ) : (
-        teamChannels?.map((channel, i) => (
-          <SearchResult
-            channel={channel}
-            focusedId={focusedId}
-            key={i}
-            setChannel={setChannel}
-            type='channel'
-          />
-        ))
-      )}
-      <p className="channel-search__results-header">Users</p>
-      {loading && !directChannels.length && (
-        <p className="channel-search__results-header">
-          <i>Loading...</i>
-        </p>
-      )}
-      {!loading && !directChannels.length ? (
-        <p className="channel-search__results-header">
-          <i>No direct messages found</i>
-        </p>
-      ) : (
-        directChannels?.map((channel, i) => (
-          <SearchResult
-            channel={channel}
-            focusedId={focusedId}
-            key={i}
-            setChannel={setChannel}
-            type='user'
-          />
-        ))
-      )}
-    </div>
+    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', position: 'absolute', zIndex: 3, top: 'calc(100% - 3px)' }}>
+      <List subheader={
+        <ListSubheader component="div" id="channel-subheader">
+          Channels
+        </ListSubheader>
+      }>
+        {loading && !teamChannels.length && (
+          <SearchLoading />
+        )}
+        {!loading && !teamChannels.length ? (
+          <NotFound name="channels" />
+        ) : (
+          teamChannels?.map((channel, i) => (
+            <SearchResult
+              channel={channel}
+              key={i}
+              setChannel={setChannel}
+              type='channel'
+            />
+          ))
+        )}
+      </List>
+      <Divider />
+      <List subheader={
+        <ListSubheader component="div" id="message-subheader">
+          Users
+        </ListSubheader>
+      }>
+        {loading && !directChannels.length && (
+          <SearchLoading />
+        )}
+        {!loading && !directChannels.length ? (
+          <NotFound name="users" />
+        ) : (
+          directChannels?.map((channel, i) => (
+            <SearchResult
+              channel={channel}
+              key={i}
+              setChannel={setChannel}
+              type='user'
+            />
+          ))
+        )}
+      </List>
+    </Box>
+
   );
 };
 

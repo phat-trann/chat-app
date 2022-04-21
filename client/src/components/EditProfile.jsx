@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useChatContext } from 'stream-chat-react';
 import { useDispatch } from 'react-redux';
-import { changeStatus, changeType, update } from '../actions';
-import { RESET_STATUS } from '../actions/types';
+import { changeStatus, changeType, logout, update } from '../actions';
+import { RESET_STATUS, STATUS_LOADING } from '../actions/types';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 const EditForm = ({ form, handleChange, handleSubmitForm }) => {
@@ -88,10 +88,18 @@ const EditChannel = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  const handleLogout = () => {
+    dispatch(changeStatus(STATUS_LOADING));
+    dispatch(logout(client));
+  }
+
   return (
     <div className="edit-channel__container">
       <div className="edit-channel__header">
         <p>Edit Profile</p>
+        <div onClick={handleLogout}>
+          Logout
+        </div>
         <AiOutlineCloseCircle onClick={handleCloseSection} />
       </div>
       <EditForm form={form} handleChange={handleChange} handleSubmitForm={handleSubmitForm} />

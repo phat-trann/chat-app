@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useChatContext } from 'stream-chat-react';
 
 import { ResultsDropdown } from './'
-import { IoIosSearch } from 'react-icons/io';
+import { Search } from '@mui/icons-material';
+import { Box, InputAdornment, TextField } from '@mui/material';
 
 
 const ChannelSearch = () => {
@@ -20,6 +21,8 @@ const ChannelSearch = () => {
   }, [query])
 
   const getChannel = async (text) => {
+    if (!text) return;
+
     try {
       const channelResponse = client.queryChannels({
         type: 'team',
@@ -55,19 +58,30 @@ const ChannelSearch = () => {
   }
 
   return (
-    <div className="channel-search__container">
-      <div className="channel-search__input__wrapper">
-        <div className="channel-search__input__icon">
-          <IoIosSearch />
-        </div>
-        <input
-          type="text"
-          className="channel-search__input__text"
-          placeholder="Search"
-          value={query}
-          onChange={changeQuery}
-        />
-      </div>
+    <Box sx={{
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}>
+      <TextField
+        variant="standard"
+        size="small"
+        fullWidth
+        placeholder="SEARCH"
+        autoFocus
+        onChange={changeQuery}
+        value={query}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search />
+            </InputAdornment>
+          ),
+          disableUnderline: true
+        }}
+        sx={{ bgcolor: 'background.paper', borderRadius: '50px', padding: '8px 10px', '& input': { padding: 0 } }}
+      />
       {query && (
         <ResultsDropdown
           teamChannels={teamChannels}
@@ -77,7 +91,7 @@ const ChannelSearch = () => {
           setQuery={setQuery}
         />
       )}
-    </div>
+    </Box>
   )
 }
 
