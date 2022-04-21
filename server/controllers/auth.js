@@ -22,7 +22,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = serverClient.createUserToken(userID);
 
-    res.status(200).json({ token, userName, userID, hashedPassword, phoneNumber });
+    res.status(200).json({ token, userName, userID, userPhoneNumber: phoneNumber, hashedPassword, phoneNumber });
   } catch (err) {
     console.log(err);
 
@@ -45,7 +45,13 @@ const login = async (req, res) => {
     const token = serverClient.createUserToken(users[0].id);
 
     if (success) {
-      res.status(200).json({ token, fullName: users[0].userName, userID: users[0].id, hashedPassword: users[0].hashedPassword });
+      res.status(200).json({
+        token,
+        userName: users[0].userName,
+        userID: users[0].id,
+        userPhoneNumber: users[0].phoneNumber,
+        hashedPassword: users[0].hashedPassword
+      });
     } else {
       res.status(200).json({ error: true, message: 'Incorrect password' });
     }

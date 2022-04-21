@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MdError } from 'react-icons/md';
 import { changeStatus, changeType, login } from '../actions';
 import { useDispatch } from 'react-redux';
 import { RESET_STATUS } from '../actions/types';
+import { Box, Button, Container, TextField, Typography, FormLabel, Link } from '@mui/material';
 
 const initialForm = {
   userName: '',
@@ -15,6 +15,7 @@ const initialForm = {
 
 const Auth = ({ client }) => {
   const [form, setForm] = useState(initialForm);
+  const [formError, setFormError] = useState(initialForm);
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
@@ -22,24 +23,62 @@ const Auth = ({ client }) => {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    if (!form.userName && !form.password) {
-      setErrorMessage('Some fields is missing!');
-      return;
-    }
+    let missingFields = Object.keys(form).map(element => {
+      if ((!isSignUp &&
+        element !== 'userName' &&
+        element !== 'password') ||
+        (element === 'avatarURL' &&
+          !form[element])) return '';
 
-    if (isSignUp) {
-      if (Object.values(form).some(el => !el)) {
-        setErrorMessage('Some fields is missing!');
-        return;
-      } else if (form.password !== form.confirmPassword) {
-        setErrorMessage('Password do NOT match!');
-        return;
+      return !form[element] ? element : '';
+    });
+
+    let resetFormError = {
+      ...initialForm
+    };
+
+    missingFields.forEach(element => {
+      if (element) {
+        resetFormError = {
+          ...resetFormError,
+          [element]: 'Please input this field.'
+        }
+      }
+    });
+
+    if (form.password &&
+      form.confirmPassword &&
+      form.password !== form.confirmPassword) {
+      resetFormError = {
+        ...resetFormError,
+        password: 'Please make sure your passwords match.',
+        confirmPassword: 'Please make sure your passwords match.'
       }
     }
 
+    if (form.phoneNumber &&
+      !form.phoneNumber.match(/\d{10}/g)) {
+      resetFormError = {
+        ...resetFormError,
+        phoneNumber: 'Invalid phone number.'
+      }
+    }
+
+    if (form.avatarURL &&
+      !form.avatarURL.match(/https?:\/\/.*\.(?:png|jpg)/g)) {
+      resetFormError = {
+        ...resetFormError,
+        avatarURL: 'Invalid image link (.jpg or .png only).'
+      }
+    }
+
+    setFormError(resetFormError);
+
+    if (Object.values(resetFormError).some(el => !!el)) return;
+
     const { userName, password, phoneNumber, avatarURL } = form;
     const URL = `${process.env.REACT_APP_HOST}/auth`;
-    const { data: { token, userID, hashedPassword, error, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+    const { data: { token, userID, userPhoneNumber, hashedPassword, error, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
       userName, password, phoneNumber, avatarURL
     });
 
@@ -48,7 +87,7 @@ const Auth = ({ client }) => {
       return;
     }
 
-    dispatch(login({ token, userID, userName, hashedPassword, client }));
+    dispatch(login({ token, userID, userName, userPhoneNumber, hashedPassword, client }));
     dispatch(changeType(''));
     dispatch(changeStatus(RESET_STATUS));
   }
@@ -76,103 +115,106 @@ const Auth = ({ client }) => {
   }, [errorMessage]);
 
   return (
-    <div className="auth__form-container">
-      <div className={`auth__form-error${errorMessage ? ' show' : ''}`}>
-        <MdError />
-        <span>{errorMessage}</span>
-      </div>
-      <div className="auth__form-container_fields">
-        <div className="auth__form-container_fields-content">
-          <p>{isSignUp ? 'Sign up' : 'Sign in'}</p>
-          <form onSubmit={handleSubmitForm}>
-            <div className="auth__form-container_fields-content_input">
-              <label htmlFor="userName">* Username</label>
-              <input
-                name="userName"
-                type="text"
-                placeholder="Username"
-                value={form.userName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {isSignUp && (
-              <div className="auth__form-container_fields-content_input">
-                <label htmlFor="phoneNumber">* Phone Number</label>
-                <input
-                  name="phoneNumber"
-                  type="text"
-                  placeholder="Phone Number"
-                  maxLength={10}
-                  value={form.phoneNumber}
-                  onChange={handleChange}
-                  pattern="(\d{10})"
-                  required
-                />
-              </div>
-            )}
-
-            {isSignUp && (
-              <div className="auth__form-container_fields-content_input">
-                <label htmlFor="avatarURL">Avatar URL (jpg or png)</label>
-                <input
-                  name="avatarURL"
-                  type="text"
-                  placeholder="Avatar URL"
-                  value={form.avatarURL}
-                  onChange={handleChange}
-                  pattern="(https?:\/\/.*\.(?:png|jpg))"
-                />
-              </div>
-            )}
-
-            <div className="auth__form-container_fields-content_input">
-              <label htmlFor="password">* Password</label>
-              <input
-                name="password"
-                type="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {isSignUp && (
-              <div className="auth__form-container_fields-content_input">
-                <label htmlFor="confirmPassword">* Confirm Password</label>
-                <input
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Confirm Password"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            )}
-            <div className="auth__form-container_fields-content_button">
-              <button>{isSignUp ? 'Sign up' : 'Sign in'}</button>
-            </div>
-          </form>
-          <div className="auth__form-container_fields-account">
-            <p>
-              {
-                isSignUp ?
-                  'Already have an account?' :
-                  'Don\'t have an account?'
-              }
-              <span onClick={_ => setIsSignUp(pre => !pre)}>
-                {
-                  isSignUp ? 'Sign In' : 'Sign up'
-                }
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Container component="main" maxWidth="xs">
+      <Box>
+        <Typography component="h1" variant="h5">
+          {isSignUp ? 'Sign up' : 'Sign in'}
+        </Typography>
+        <Box component="form" onSubmit={handleSubmitForm} noValidate autoComplete="off">
+          <TextField
+            margin="dense"
+            required
+            fullWidth
+            placeholder="Username *"
+            name="userName"
+            autoFocus
+            onChange={handleChange}
+            value={form.userName}
+            error={!!formError.userName}
+            helperText={formError.userName}
+          />
+          {isSignUp && (
+            <TextField
+              margin="dense"
+              required
+              fullWidth
+              placeholder="Phone Number *"
+              name="phoneNumber"
+              onChange={handleChange}
+              value={form.phoneNumber}
+              error={!!formError.phoneNumber}
+              helperText={formError.phoneNumber}
+              inputProps={{
+                maxLength: 10
+              }}
+            />
+          )}
+          {isSignUp && (
+            <TextField
+              margin="dense"
+              fullWidth
+              placeholder="Avatar URL"
+              name="avatarURL"
+              onChange={handleChange}
+              value={form.avatarURL}
+              error={!!formError.avatarURL}
+              helperText={formError.avatarURL}
+              maxLength={10}
+            />
+          )}
+          <TextField
+            margin="dense"
+            required
+            fullWidth
+            placeholder="Password *"
+            name="password"
+            type="password"
+            onChange={handleChange}
+            value={form.password}
+            error={!!formError.password}
+            helperText={formError.password}
+          />
+          {isSignUp && (
+            <TextField
+              margin="dense"
+              required
+              fullWidth
+              placeholder="Confirm Password *"
+              name="confirmPassword"
+              type="password"
+              onChange={handleChange}
+              value={form.confirmPassword}
+              error={!!formError.confirmPassword}
+              helperText={formError.confirmPassword}
+            />
+          )}
+          <Button
+            fullWidth
+            variant="contained"
+            type="submit"
+            size="large"
+          >
+            {isSignUp ? 'Sign up' : 'Sign in'}
+          </Button>
+        </Box>
+        <FormLabel>
+          {
+            isSignUp ?
+              'Already have an account? ' :
+              'Don\'t have an account? '
+          }
+          <Link href="#" underline="hover" onClick={(e) => {
+            e.preventDefault();
+            setFormError(initialForm);
+            setIsSignUp(pre => !pre);
+          }}>
+            {
+              isSignUp ? 'Sign In' : 'Sign up'
+            }
+          </Link>
+        </FormLabel>
+      </Box>
+    </Container>
   )
 }
 

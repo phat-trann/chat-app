@@ -6,19 +6,21 @@ import { LOGIN, LOGOUT, UPDATE_PROFILE } from './types';
 
 const cookies = new Cookies();
 
-const login = ({ token, userID, userName, hashedPassword, client: currentClient }) => {
+const login = ({ token, userID, userName, userPhoneNumber, hashedPassword, client: currentClient }) => {
   return async (dispatch) => {
     let client;
 
     if (token &&
       userID &&
       userName &&
+      userPhoneNumber &&
       hashedPassword &&
       currentClient
     ) {
       cookies.set('token', token);
       cookies.set('userName', userName);
       cookies.set('userID', userID);
+      cookies.set('phoneNumber', userPhoneNumber);
       cookies.set('hashedPassword', hashedPassword);
       client = currentClient;
     } else {
@@ -33,6 +35,7 @@ const login = ({ token, userID, userName, hashedPassword, client: currentClient 
       await client.connectUser({
         id: userID || cookies.get('userID'),
         name: userName || cookies.get('userName'),
+        phoneNumber: userPhoneNumber || cookies.get('phoneNumber'),
         hashedPassword: hashedPassword || cookies.get('hashedPassword')
       }, authToken);
     }
@@ -52,7 +55,6 @@ const logout = (client) => {
     cookies.remove('token');
     cookies.remove('userID');
     cookies.remove('userName');
-    cookies.remove('avatarURL');
     cookies.remove('phoneNumber');
     cookies.remove('hashedPassword');
 

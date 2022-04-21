@@ -4,7 +4,7 @@
 ### Phase 2: Fix issues - ***Done***
 ### Phase 3: Customize using redux - ***Done***
 ### Phase 4: Apply more function - ***Done***
-### Phase 5: Customize style using MUI & style-components
+### Phase 5: Customize style using MUI & styled-components
 ---
 #### Using
 - Just using react & react-dom @17.0.2
