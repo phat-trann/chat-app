@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { changeStatus, changeType, login } from '../actions';
 import { useDispatch } from 'react-redux';
-import { RESET_STATUS, STATUS_LOADING } from '../actions/types';
+import { STATUS_LOADING } from '../actions/types';
 import { Box, Button, Container, TextField, Typography, FormLabel, Link } from '@mui/material';
 
 const initialForm = {

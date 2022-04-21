@@ -1,46 +1,12 @@
 import React from 'react';
 import { Avatar, ChannelList } from 'stream-chat-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Container, IconButton, Menu, MenuItem } from '@mui/material';
 
 import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 
-import { IoIosHome, IoIosLogOut } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
 import { changeStatus, logout } from '../actions';
 import { STATUS_EDIT_PROFILE, STATUS_LOADING } from '../actions/types';
-
-const SideBar = ({ handleLogout, client }) => {
-  const dispatch = useDispatch();
-  const image = useSelector(state => state.client.newImage);
-
-  return (
-    <div className="channel-list__sidebar">
-      <div className="channel-list__sidebar__home">
-        <div className="icon__inner" >
-          {
-            client?.user ?
-              <Avatar image={image || client.user.image} name={client.user.name} size={44} onClick={() => {
-                dispatch(changeStatus(STATUS_EDIT_PROFILE));
-              }}/> :
-              <IoIosHome />
-          }
-        </div>
-      </div>
-      <div className="channel-list__sidebar__logout">
-        <div className="icon__inner" onClick={handleLogout}>
-          <IoIosLogOut />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const CompanyHeader = () => (
-  <div className="channel-list__header">
-    <p className="channel-list__header__text">
-      Chat App
-    </p>
-  </div>
-)
 
 const customChannelTeamFilter = (channels) => {
   return channels.filter(channel => channel.type === 'team');
@@ -51,7 +17,10 @@ const customChannelMessageFilter = (channels) => {
 }
 
 const ChannelListContainer = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
   const clientResults = useSelector((state) => state.client);
+  const image = useSelector(state => state.client.newImage);
   const dispatch = useDispatch();
   const client = clientResults.client;
   const filter = { members: { $in: [clientResults.userID] } };
@@ -61,46 +30,99 @@ const ChannelListContainer = () => {
     dispatch(logout(client));
   }
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <>
-      <SideBar handleLogout={handleLogout} client={client} />
-      <div className="channel-list__list__wrapper">
-        <CompanyHeader />
-        <ChannelSearch />
-        <ChannelList
-          filters={filter}
-          channelRenderFilterFn={customChannelTeamFilter}
-          List={(listProps) => (
-            <TeamChannelList
-              {...listProps}
-              type="team"
-            />
-          )}
-          Preview={(previewProps) => (
-            <TeamChannelPreview
-              {...previewProps}
-              type="team"
-            />
-          )}
-        />
-        <ChannelList
-          filters={filter}
-          channelRenderFilterFn={customChannelMessageFilter}
-          List={(listProps) => (
-            <TeamChannelList
-              {...listProps}
-              type="messaging"
-            />
-          )}
-          Preview={(previewProps) => (
-            <TeamChannelPreview
-              {...previewProps}
-              type="messaging"
-            />
-          )}
-        />
-      </div>
-    </>
+    <Container sx={{ background: 'red', height: '100vh' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+        <IconButton
+          onClick={handleClick}
+          aria-controls={open ? 'account-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          sx={{ '& div': { margin: 0 } }}
+        >
+          <Avatar image={image || client.user.image} size={44} />
+        </IconButton>
+      </Box>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.36))',
+            mt: 1.5,
+            '& .MuiAvatar-root': {
+              width: 44,
+              height: 44,
+            },
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 25,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem onClick={() => {
+          dispatch(changeStatus(STATUS_EDIT_PROFILE));
+        }}>Profile</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
+      <ChannelSearch />
+      <ChannelList
+        filters={filter}
+        channelRenderFilterFn={customChannelTeamFilter}
+        List={(listProps) => (
+          <TeamChannelList
+            {...listProps}
+            type="team"
+          />
+        )}
+        Preview={(previewProps) => (
+          <TeamChannelPreview
+            {...previewProps}
+            type="team"
+          />
+        )}
+      />
+      <ChannelList
+        filters={filter}
+        channelRenderFilterFn={customChannelMessageFilter}
+        List={(listProps) => (
+          <TeamChannelList
+            {...listProps}
+            type="messaging"
+          />
+        )}
+        Preview={(previewProps) => (
+          <TeamChannelPreview
+            {...previewProps}
+            type="messaging"
+          />
+        )}
+      />
+    </Container>
   )
 }
 
