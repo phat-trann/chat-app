@@ -11,7 +11,6 @@ import { changeStatus, login } from './actions';
 import { RESET_STATUS, STATUS_LOADING } from './actions/types';
 
 import 'stream-chat-react/dist/css/index.css';
-import './styles/App.scss';
 
 const App = () => {
   const clientResults = useSelector((state) => state.client);

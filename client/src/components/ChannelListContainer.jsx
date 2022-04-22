@@ -20,6 +20,9 @@ const customStyle = {
   width: '100%',
   bgcolor: 'background.paper',
   borderRadius: '25px',
+  '& .str-chat': {
+    height: 'inherit'
+  },
   '& .str-chat-channel-list': {
     float: 'none',
     mt: 2,
