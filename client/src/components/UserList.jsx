@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
-import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
+import { Divider, ListSubheader, List, ListItem, IconButton, ListItemButton, ListItemIcon, ListItemText, Skeleton } from '@mui/material';
+import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
 
 const ListContainer = ({ children, isShowExisted }) => {
   return (
-    <div className="user-list__container">
-      <div className="user-list__header">
-        <p>{isShowExisted ? 'Current User(s)' : 'Available User(s)'}</p>
-        <p>{isShowExisted ? '' : 'Invite'}</p>
-      </div>
+    <List subheader={
+      <ListSubheader disableSticky component="div" sx={{ pl: 0, pr: 0 }}>
+        {isShowExisted ? 'Current User(s)' : 'Available User(s)'}
+        <Divider />
+      </ListSubheader>
+    } sx={{ padding: 0, pt: 1, pb: 1 }}>
       {children}
-    </div>
+    </List>
   )
 }
 
@@ -32,20 +34,58 @@ const UserItem = ({ user, setSelectedUsers, isShowExisted }) => {
   }
 
   return (
-    <div className="user-item__wrapper" onClick={isShowExisted ? () => { } : handleInvited}>
-      <div className="user-item__name-wrapper">
-        <Avatar image={user.image} name={user.name} size={32} />
-        <p className="user-item__name">{user.name}</p>
-      </div>
-      {
-        isShowExisted ? '' :
-          (invited ?
-            <ImCheckboxChecked /> :
-            <ImCheckboxUnchecked />)
-      }
-    </div>
+    <ListItem disablePadding onClick={isShowExisted ? () => { } : handleInvited} secondaryAction={
+      isShowExisted ? '' :
+        (invited ?
+          (<IconButton edge="end" aria-label="delete">
+            <CheckBox />
+          </IconButton>) :
+          (<IconButton edge="end" aria-label="delete">
+            <CheckBoxOutlineBlank />
+          </IconButton>))
+    }>
+      <ListItemButton>
+        <ListItemIcon>
+          <Avatar image={user.image} name={user.name} size={32} />
+        </ListItemIcon>
+        <ListItemText primary={user.name} />
+      </ListItemButton>
+    </ListItem>
   )
 }
+
+const Loading = () => (<>
+  <ListItem disablePadding>
+    <ListItemButton>
+      <ListItemIcon>
+        <Skeleton variant="circular" width={32} height={32} />
+      </ListItemIcon>
+      <ListItemText primary={
+        <Skeleton variant="text" width="100%" height={32} />
+      } />
+    </ListItemButton>
+  </ListItem>
+  <ListItem disablePadding>
+    <ListItemButton>
+      <ListItemIcon>
+        <Skeleton variant="circular" width={32} height={32} />
+      </ListItemIcon>
+      <ListItemText primary={
+        <Skeleton variant="text" width="100%" height={32} />
+      } />
+    </ListItemButton>
+  </ListItem>
+</>);
+
+const Error = ({ children }) => (<ListItem disablePadding>
+  <ListItemButton>
+    <ListItemIcon>
+    </ListItemIcon>
+    <ListItemText primary={
+      <i>{children}</i>
+    } />
+  </ListItemButton>
+</ListItem>)
 
 const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = false }) => {
   const { client } = useChatContext();
@@ -100,9 +140,11 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
   return (
     <ListContainer isShowExisted={isShowExisted}>
       {(message) ? (
-        <div className="user-list__message">
-          {message}
-        </div>
+        message === 'Loading' ?
+          <Loading /> :
+          (<Error>
+            {message}
+          </Error>)
       ) : (
         users?.map((user, i) => {
           return <UserItem index={i} key={user.id} user={user} setSelectedUsers={setSelectedUsers} isShowExisted={isShowExisted} />

@@ -83,6 +83,7 @@ const ChannelSearch = () => {
         sx={{
           bgcolor: 'background.paper',
           borderRadius: '50px',
+          zIndex: '4',
           '& > div': {
             padding: '10px'
           },

@@ -75,7 +75,7 @@ const NotFound = ({ name }) => (<ListItem disablePadding>
 
 const ResultsDropdown = ({ teamChannels, directChannels, loading, setChannel }) => {
   return (
-    <Box sx={{ width: '100%', bgcolor: 'background.paper', position: 'absolute', zIndex: 3, top: 'calc(100% - 3px)' }}>
+    <Box sx={{ width: '100%', bgcolor: 'background.paper', color: '#000', pt: 2, position: 'absolute', zIndex: 3, top: 'calc(100% - 20px)' }}>
       <List subheader={
         <ListSubheader disableSticky component="div" id="channel-subheader">
           Channels

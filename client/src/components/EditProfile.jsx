@@ -136,34 +136,39 @@ const EditChannel = () => {
 
   return (
     <Container component="main" sx={{
-      height: '100vh',
-      pt: 10,
-      overflow: 'auto',
-      '&::-webkit-scrollbar': {
-        display: 'none'
-      }
+      height: 'calc(100vh - 96px)',
+      mt: 10,
+      mb: 2
     }}>
       <Box sx={{
         bgcolor: '#fff',
         borderRadius: '25px',
-        padding: 6
+        maxHeight: '100%',
+        overflow: 'auto',
+        '&::-webkit-scrollbar': {
+          display: 'none'
+        }
       }}>
-        <HeaderForChange handleLogout={handleLogout} handleClose={handleCloseSection}>
-          <IconButton>
-            <Edit sx={{ width: '28px', height: '28px' }} />
-          </IconButton>
-          Edit Profile
-        </HeaderForChange>
-        <EditForm form={form} formError={formError} handleChange={handleChange} handleSubmitForm={handleSubmitForm} />
+        <Box sx={{
+          padding: 6,
+        }}>
+          <HeaderForChange handleLogout={handleLogout} handleClose={handleCloseSection}>
+            <IconButton>
+              <Edit sx={{ width: '28px', height: '28px' }} />
+            </IconButton>
+            Edit Profile
+          </HeaderForChange>
+          <EditForm form={form} formError={formError} handleChange={handleChange} handleSubmitForm={handleSubmitForm} />
+        </Box>
+        <AlertDialog
+          open={open}
+          content={'Are you sure you want to change your profile?'}
+          handleClose={() => setOpen(false)}
+          handleAgree={() => {
+            handleChangeProfile();
+            setOpen(false);
+          }} />
       </Box>
-      <AlertDialog
-        open={open}
-        content={'Are you sure you want to change your profile?'}
-        handleClose={() => setOpen(false)}
-        handleAgree={() => {
-          handleChangeProfile();
-          setOpen(false);
-        }} />
     </Container>
   )
 }

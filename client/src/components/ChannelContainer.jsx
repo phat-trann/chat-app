@@ -9,15 +9,12 @@ const ChannelContainer = () => {
   const status = useSelector(state => state.status);
 
   if (status) {
-    if (status === STATUS_EDIT_PROFILE) {
-      return <EditProfile />
-    }
     return (
-      <div className="channel__container">
-        {status === STATUS_CREATING ?
+      (status === STATUS_EDIT_PROFILE) ?
+        <EditProfile /> :
+        ((status === STATUS_CREATING) ?
           <CreateChannel /> :
-          <EditChannel />}
-      </div>
+          <EditChannel />)
     )
   }
 
