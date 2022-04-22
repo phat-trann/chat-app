@@ -21,6 +21,9 @@ const App = () => {
     palette: {
       primary: {
         main: green[800]
+      },
+      online: {
+        main: green['A400']
       }
     },
   });
@@ -51,10 +54,10 @@ const App = () => {
             <Auth client={clientResults?.client} /> :
             (<Chat client={clientResults?.client} theme="team light">
               <Grid maxWidth="lg" container spacing={0} sx={{ margin: 'auto' }}>
-                <Grid item xs={6} md={4}>
+                <Grid item xs={12} md={4}>
                   <ChannelListContainer />
                 </Grid>
-                <Grid item xs={6} md={8}>
+                <Grid item xs={12} md={8}>
                   <ChannelContainer />
                 </Grid>
               </Grid>

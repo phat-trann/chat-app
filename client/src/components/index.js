@@ -10,3 +10,4 @@ export { default as Auth } from './Auth';
 export { default as UserList } from './UserList';
 export { default as ResultsDropdown } from './ResultsDropdown';
 export { default as EditProfile } from './EditProfile';
+export { default as AlertDialog } from './AlertDialog';

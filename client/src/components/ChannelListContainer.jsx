@@ -24,7 +24,12 @@ const customStyle = {
     float: 'none',
     mt: 2,
     mb: 1,
-    borderRadius: '50px'
+    borderRadius: '50px',
+    position: 'inherit',
+    minHeight: 'inherit',
+    overflow: 'inherit',
+    boxShadow: 'none',
+    transition: 'none'
   }
 }
 
@@ -38,7 +43,7 @@ const ChannelListContainer = () => {
   return (
     <Container sx={{
       height: '100vh',
-      pt: 6.5,
+      pt: 8,
       overflow: 'auto',
       '&::-webkit-scrollbar': {
         display: 'none'
