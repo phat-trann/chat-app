@@ -1,6 +1,6 @@
-import { ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Skeleton, List, Grid, Divider } from '@mui/material';
+import { ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Skeleton, List, Grid, Divider, IconButton } from '@mui/material';
 import React from 'react';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { Add, Remove } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeStatus, changeType } from '../actions';
 import { RESET_STATUS, STATUS_CREATING } from '../actions/types';
@@ -15,13 +15,13 @@ const AddChannel = ({ type }) => {
   }
 
   return (
-    <div onClick={handleClickAddChannel}>
+    <IconButton onClick={handleClickAddChannel}>
       {
         currentType === type && currentStatus === STATUS_CREATING ?
-          <AiOutlineMinus /> :
-          <AiOutlinePlus />
+          <Remove /> :
+          <Add />
       }
-    </div>
+    </IconButton>
   )
 };
 

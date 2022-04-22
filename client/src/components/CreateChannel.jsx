@@ -33,7 +33,7 @@ const CreateChannel = () => {
   const createChannel = async (e) => {
     e.preventDefault();
 
-    if ((createType === 'team' && !channelName) || !selectedUsers.length) return;
+    if ((createType === 'team' && !channelName) || selectedUsers.length < 2) return;
 
     try {
       const newChannel = await client.channel(createType, channelName, {
