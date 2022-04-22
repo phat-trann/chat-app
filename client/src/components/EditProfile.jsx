@@ -7,7 +7,7 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 const EditForm = ({ form, handleChange, handleSubmitForm }) => {
   return (
-    <div className="auth__form-container">
+    <div className="">
       <div className="auth__form-container_fields">
         <div className="auth__form-container_fields-content">
           <form onSubmit={handleSubmitForm}>

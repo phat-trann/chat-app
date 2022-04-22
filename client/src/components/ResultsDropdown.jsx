@@ -77,7 +77,7 @@ const ResultsDropdown = ({ teamChannels, directChannels, loading, setChannel }) 
   return (
     <Box sx={{ width: '100%', bgcolor: 'background.paper', position: 'absolute', zIndex: 3, top: 'calc(100% - 3px)' }}>
       <List subheader={
-        <ListSubheader component="div" id="channel-subheader">
+        <ListSubheader disableSticky component="div" id="channel-subheader">
           Channels
         </ListSubheader>
       }>
@@ -99,7 +99,7 @@ const ResultsDropdown = ({ teamChannels, directChannels, loading, setChannel }) 
       </List>
       <Divider />
       <List subheader={
-        <ListSubheader component="div" id="message-subheader">
+        <ListSubheader disableSticky component="div" id="message-subheader">
           Users
         </ListSubheader>
       }>

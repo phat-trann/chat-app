@@ -49,7 +49,7 @@ const TeamChannelPreview = ({ channel, type }) => {
           <Avatar
             image={members[0]?.user?.image}
             name={members[0]?.user?.name}
-            size={24}
+            size={30}
           />
         </ListItemIcon>
         <ListItemText primary={`${members[0]?.user?.name || members[0]?.user?.id}${members[1]?.user?.name ? ', ...' : ''}`} />

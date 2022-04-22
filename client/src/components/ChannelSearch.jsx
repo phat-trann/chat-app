@@ -80,7 +80,16 @@ const ChannelSearch = () => {
           ),
           disableUnderline: true
         }}
-        sx={{ bgcolor: 'background.paper', borderRadius: '50px', padding: '8px 10px', '& input': { padding: 0 } }}
+        sx={{
+          bgcolor: 'background.paper',
+          borderRadius: '50px',
+          '& > div': {
+            padding: '10px'
+          },
+          '& input': {
+            padding: 0
+          }
+        }}
       />
       {query && (
         <ResultsDropdown

@@ -28,10 +28,10 @@ const AddChannel = ({ type }) => {
 const Loading = () => (<ListItem disablePadding>
   <ListItemButton>
     <ListItemIcon>
-      <Skeleton variant="circular" width={24} height={24} />
+      <Skeleton variant="circular" width={30} height={30} />
     </ListItemIcon>
     <ListItemText primary={
-      <Skeleton variant="text" width="100%" height={24} />
+      <Skeleton variant="text" width="100%" height={30} />
     } />
   </ListItemButton>
 </ListItem>);
@@ -53,7 +53,7 @@ const TeamChannelList = ({
 }) => {
   return (
     <List subheader={
-      <ListSubheader component="div" id={`${type}-preview-subheader`} sx={{ borderRadius: '25px' }}>
+      <ListSubheader disableSticky component="div" id={`${type}-preview-subheader`} sx={{ borderRadius: '25px', pl: 0, pr: 0 }}>
         <>
           <Grid container>
             <Grid item xs={11}>
@@ -66,7 +66,7 @@ const TeamChannelList = ({
           <Divider />
         </>
       </ListSubheader>
-    }>
+    } sx={{ pl: 2, pr: 2, pt: 1, pb: 2 }}>
       {
         error ? <NotFound /> : (
           loading ? <Loading /> : children
