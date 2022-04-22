@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useChatContext } from 'stream-chat-react';
-
-import { UserList } from './';
+import { UserList, HeaderForChange } from './';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeStatus, changeType } from '../actions';
 import { RESET_STATUS } from '../actions/types';
-
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { AddCircleOutline } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 
 const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   const handleChange = (e) => {
@@ -58,10 +57,12 @@ const CreateChannel = () => {
 
   return (
     <div className="create-channel__container">
-      <div className="create-channel__header">
-        <p>{createType === 'team' ? 'Create a New Channel' : 'Send a direct Message'}</p>
-        <AiOutlineCloseCircle onClick={handleCloseCreate}/>
-      </div>
+      <HeaderForChange handleClose={handleCloseCreate}>
+        <IconButton>
+          <AddCircleOutline sx={{ width: '28px', height: '28px' }} />
+        </IconButton>
+        {createType === 'team' ? 'Create a New Channel' : 'Send a direct Message'}
+      </HeaderForChange>
       {createType === 'team' && <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />}
       <UserList setSelectedUsers={setSelectedUsers} />
       <div className="create-channel__button-wrapper" onClick={createChannel}>

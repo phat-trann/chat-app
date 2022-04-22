@@ -6,7 +6,7 @@ import { AppBar, Box, Container, Grid } from '@mui/material';
 import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 
 import { changeStatus } from '../actions';
-import { STATUS_EDIT_PROFILE } from '../actions/types';
+import { RESET_STATUS, STATUS_EDIT_PROFILE } from '../actions/types';
 
 const customChannelTeamFilter = (channels) => {
   return channels.filter(channel => channel.type === 'team');
@@ -35,6 +35,7 @@ const customStyle = {
 
 const ChannelListContainer = () => {
   const clientResults = useSelector((state) => state.client);
+  const currentStatus = useSelector((state) => state.status);
   const image = useSelector(state => state.client.newImage);
   const dispatch = useDispatch();
   const client = clientResults.client;
@@ -57,7 +58,8 @@ const ChannelListContainer = () => {
                 <Grid container sx={{ alignItems: 'center', pl: 0, pointerEvents: 'all' }}>
                   <Grid item xs={2} sx={{ '& div': { cursor: 'pointer' } }}>
                     <Avatar image={image || client.user.image} size={44} onClick={() => {
-                      dispatch(changeStatus(STATUS_EDIT_PROFILE));
+                      if (currentStatus === STATUS_EDIT_PROFILE) dispatch(changeStatus(RESET_STATUS));
+                      else dispatch(changeStatus(STATUS_EDIT_PROFILE));
                     }} />
                   </Grid>
                   <Grid item xs={10}>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useChatContext } from 'stream-chat-react';
 
-import { UserList } from './';
+import { UserList, HeaderForChange } from './';
 import { useDispatch } from 'react-redux';
 import { changeStatus, changeType } from '../actions';
 import { RESET_STATUS, STATUS_EDITING } from '../actions/types';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { IconButton } from '@mui/material';
+import { Edit } from '@mui/icons-material';
 
 const ChannelNameInput = ({ channelName = '', setChannelName }) => {
   const handleChange = (e) => {
@@ -52,13 +53,15 @@ const EditChannel = () => {
 
   return (
     <div className="edit-channel__container">
-      <div className="edit-channel__header">
-        <p>Edit Channel</p>
-        <AiOutlineCloseCircle onClick={handleCloseCreate}/>
-      </div>
+      <HeaderForChange handleClose={handleCloseCreate}>
+        <IconButton>
+          <Edit sx={{ width: '28px', height: '28px' }} />
+        </IconButton>
+        Edit Channel
+      </HeaderForChange>
       <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />
-      <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel} isShowExisted={true}/>
-      <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel}/>
+      <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel} isShowExisted={true} />
+      <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel} />
       <div className="edit-channel__button-wrapper" onClick={updateChannel}>
         <p>Save changes</p>
       </div>

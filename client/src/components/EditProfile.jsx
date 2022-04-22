@@ -3,51 +3,58 @@ import { useChatContext } from 'stream-chat-react';
 import { useDispatch } from 'react-redux';
 import { changeStatus, changeType, logout, update } from '../actions';
 import { RESET_STATUS, STATUS_LOADING } from '../actions/types';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { HeaderForChange, AlertDialog } from './';
+import { Box, Button, Container, IconButton, TextField, Typography } from '@mui/material';
+import { Edit } from '@mui/icons-material';
 
-const EditForm = ({ form, handleChange, handleSubmitForm }) => {
+const EditForm = ({ form, formError, handleChange, handleSubmitForm }) => {
   return (
-    <div className="">
-      <div className="auth__form-container_fields">
-        <div className="auth__form-container_fields-content">
-          <form onSubmit={handleSubmitForm}>
-            <div className="auth__form-container_fields-content_input">
-              <h3>Username: {form.userName}</h3>
-            </div>
-
-            <div className="auth__form-container_fields-content_input">
-              <label htmlFor="phoneNumber">* Phone Number</label>
-              <input
-                name="phoneNumber"
-                type="text"
-                placeholder="Phone Number"
-                maxLength={10}
-                value={form.phoneNumber}
-                onChange={handleChange}
-                pattern="(\d{10})"
-                required
-              />
-            </div>
-
-            <div className="auth__form-container_fields-content_input">
-              <label htmlFor="avatarURL">Avatar URL (jpg or png)</label>
-              <input
-                name="avatarURL"
-                type="text"
-                placeholder="Avatar URL"
-                value={form.avatarURL}
-                onChange={handleChange}
-                pattern="(https?:\/\/.*\.(?:png|jpg))"
-              />
-            </div>
-
-            <div className="auth__form-container_fields-content_button">
-              <button>Submit Edit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Container component="main">
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}>
+        <Box component="form" onSubmit={handleSubmitForm} noValidate sx={{ mt: 1 }} autoComplete="off">
+          <Typography component="h1" variant="h5" sx={{ width: '100%', mb: 2 }}>
+            Username: {form.userName}
+          </Typography>
+          <TextField
+            margin="dense"
+            required
+            fullWidth
+            label="Phone Number"
+            name="phoneNumber"
+            onChange={handleChange}
+            value={form.phoneNumber}
+            error={!!formError.phoneNumber}
+            helperText={formError.phoneNumber}
+            inputProps={{
+              maxLength: 10
+            }}
+          />
+          <TextField
+            margin="dense"
+            fullWidth
+            label="Avatar URL"
+            name="avatarURL"
+            onChange={handleChange}
+            value={form.avatarURL}
+            error={!!formError.avatarURL}
+            helperText={formError.avatarURL}
+            maxLength={10}
+          />
+          <Button
+            variant="contained"
+            type="submit"
+            size="large"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Submit Edit
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   )
 }
 
@@ -58,11 +65,45 @@ const EditChannel = () => {
     phoneNumber: client?.user?.phoneNumber || '',
     avatarURL: client?.user?.image || ''
   }
+  let formErrorObject = {
+    phoneNumber: '',
+    avatarURL: ''
+  }
   const [form, setForm] = useState(initialForm);
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState(formErrorObject);
   const dispatch = useDispatch();
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
+    if (!form.phoneNumber) {
+      formErrorObject = {
+        ...formErrorObject,
+        phoneNumber: 'Please input this field.'
+      }
+    } else if (form.phoneNumber &&
+      !form.phoneNumber.match(/\d{10}/g)) {
+      formErrorObject = {
+        ...formErrorObject,
+        phoneNumber: 'Invalid phone number.'
+      }
+    }
+
+    if (form.avatarURL &&
+      !form.avatarURL.match(/https?:\/\/.*\.(?:png|jpg)/g)) {
+      formErrorObject = {
+        ...formErrorObject,
+        avatarURL: 'Invalid image link (.jpg or .png only).'
+      }
+    }
+
+    setFormError(formErrorObject);
+
+    if (Object.values(formErrorObject).some(el => !!el)) return;
+    setOpen(true);
+  }
+
+  const handleChangeProfile = async () => {
     const updateData = {
       id: client.userID,
       set: {
@@ -94,16 +135,36 @@ const EditChannel = () => {
   }
 
   return (
-    <div className="edit-channel__container">
-      <div className="edit-channel__header">
-        <p>Edit Profile</p>
-        <div onClick={handleLogout}>
-          Logout
-        </div>
-        <AiOutlineCloseCircle onClick={handleCloseSection} />
-      </div>
-      <EditForm form={form} handleChange={handleChange} handleSubmitForm={handleSubmitForm} />
-    </div>
+    <Container component="main" sx={{
+      height: '100vh',
+      pt: 10,
+      overflow: 'auto',
+      '&::-webkit-scrollbar': {
+        display: 'none'
+      }
+    }}>
+      <Box sx={{
+        bgcolor: '#fff',
+        borderRadius: '25px',
+        padding: 6
+      }}>
+        <HeaderForChange handleLogout={handleLogout} handleClose={handleCloseSection}>
+          <IconButton>
+            <Edit sx={{ width: '28px', height: '28px' }} />
+          </IconButton>
+          Edit Profile
+        </HeaderForChange>
+        <EditForm form={form} formError={formError} handleChange={handleChange} handleSubmitForm={handleSubmitForm} />
+      </Box>
+      <AlertDialog
+        open={open}
+        content={'Are you sure you want to change your profile?'}
+        handleClose={() => setOpen(false)}
+        handleAgree={() => {
+          handleChangeProfile();
+          setOpen(false);
+        }} />
+    </Container>
   )
 }
 

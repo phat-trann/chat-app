@@ -11,3 +11,4 @@ export { default as UserList } from './UserList';
 export { default as ResultsDropdown } from './ResultsDropdown';
 export { default as EditProfile } from './EditProfile';
 export { default as AlertDialog } from './AlertDialog';
+export { default as HeaderForChange } from './HeaderForChange';

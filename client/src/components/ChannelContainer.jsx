@@ -10,9 +10,7 @@ const ChannelContainer = () => {
 
   if (status) {
     if (status === STATUS_EDIT_PROFILE) {
-      return <div className="channel__container">
-          <EditProfile />
-      </div>
+      return <EditProfile />
     }
     return (
       <div className="channel__container">
