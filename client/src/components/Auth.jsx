@@ -120,7 +120,7 @@ const Auth = ({ client }) => {
   }, [errorMessage]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="sm">
       <Box
         sx={{
           paddingTop: 8,
@@ -128,107 +128,127 @@ const Auth = ({ client }) => {
           flexDirection: 'column',
           alignItems: 'center'
         }}>
-        <Typography
-          component="h1"
-          variant="h3"
-          sx={{ width: '100%', mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-          FERB<FormLabel sx={{ fontSize: '0.75em' }}>ooK</FormLabel>
-        </Typography>
-        <Typography component="h1" variant="h5" sx={{ width: '100%' }}>
-          {isSignUp ? 'Sign up' : 'Sign in'}
-        </Typography>
         <Box
-          component="form"
-          onSubmit={handleSubmitForm}
-          noValidate
-          sx={{ mt: 1 }}
-          autoComplete="off">
-          <TextField
-            margin="dense"
-            required
-            fullWidth
-            placeholder="Username *"
-            name="userName"
-            autoFocus
-            onChange={handleChange}
-            value={form.userName}
-            error={!!formError.userName}
-            helperText={formError.userName}
-            inputRef={userNameRef}
-          />
-          {isSignUp && (
+          sx={{
+            paddingTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            bgcolor: '#fff',
+            pl: {
+              xs: 3,
+              md: 5
+            },
+            pr: {
+              xs: 3,
+              md: 5
+            },
+            pt: 6,
+            pb: 6,
+            borderRadius: '50px'
+          }}>
+          <Typography
+            component="h1"
+            variant="h3"
+            sx={{ width: '100%', mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            FERB<FormLabel sx={{ fontSize: '0.75em' }}>ooK</FormLabel>
+          </Typography>
+          <Typography component="h1" variant="h5" sx={{ width: '100%' }}>
+            {isSignUp ? 'Sign up' : 'Sign in'}
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmitForm}
+            noValidate
+            sx={{ mt: 1 }}
+            autoComplete="off">
             <TextField
               margin="dense"
               required
               fullWidth
-              placeholder="Phone Number *"
-              name="phoneNumber"
+              placeholder="Username *"
+              name="userName"
+              autoFocus
               onChange={handleChange}
-              value={form.phoneNumber}
-              error={!!formError.phoneNumber}
-              helperText={formError.phoneNumber}
-              inputProps={{
-                maxLength: 10
-              }}
+              value={form.userName}
+              error={!!formError.userName}
+              helperText={formError.userName}
+              inputRef={userNameRef}
             />
-          )}
-          {isSignUp && (
-            <TextField
-              margin="dense"
-              fullWidth
-              placeholder="Avatar URL"
-              name="avatarURL"
-              onChange={handleChange}
-              value={form.avatarURL}
-              error={!!formError.avatarURL}
-              helperText={formError.avatarURL}
-              maxLength={10}
-            />
-          )}
-          <TextField
-            margin="dense"
-            required
-            fullWidth
-            placeholder="Password *"
-            name="password"
-            type="password"
-            onChange={handleChange}
-            value={form.password}
-            error={!!formError.password}
-            helperText={formError.password}
-          />
-          {isSignUp && (
+            {isSignUp && (
+              <TextField
+                margin="dense"
+                required
+                fullWidth
+                placeholder="Phone Number *"
+                name="phoneNumber"
+                onChange={handleChange}
+                value={form.phoneNumber}
+                error={!!formError.phoneNumber}
+                helperText={formError.phoneNumber}
+                inputProps={{
+                  maxLength: 10
+                }}
+              />
+            )}
+            {isSignUp && (
+              <TextField
+                margin="dense"
+                fullWidth
+                placeholder="Avatar URL"
+                name="avatarURL"
+                onChange={handleChange}
+                value={form.avatarURL}
+                error={!!formError.avatarURL}
+                helperText={formError.avatarURL}
+                maxLength={10}
+              />
+            )}
             <TextField
               margin="dense"
               required
               fullWidth
-              placeholder="Confirm Password *"
-              name="confirmPassword"
+              placeholder="Password *"
+              name="password"
               type="password"
               onChange={handleChange}
-              value={form.confirmPassword}
-              error={!!formError.confirmPassword}
-              helperText={formError.confirmPassword}
+              value={form.password}
+              error={!!formError.password}
+              helperText={formError.password}
             />
-          )}
-          <Button fullWidth variant="contained" type="submit" size="large" sx={{ mt: 3, mb: 2 }}>
-            {isSignUp ? 'Sign up' : 'Sign in'}
-          </Button>
+            {isSignUp && (
+              <TextField
+                margin="dense"
+                required
+                fullWidth
+                placeholder="Confirm Password *"
+                name="confirmPassword"
+                type="password"
+                onChange={handleChange}
+                value={form.confirmPassword}
+                error={!!formError.confirmPassword}
+                helperText={formError.confirmPassword}
+              />
+            )}
+            <Button fullWidth variant="contained" type="submit" size="large" sx={{ mt: 3, mb: 2 }}>
+              {isSignUp ? 'Sign up' : 'Sign in'}
+            </Button>
+          </Box>
+          <FormLabel>
+            {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+            <Link
+              href="#"
+              underline="hover"
+              onClick={(e) => {
+                e.preventDefault();
+                setFormError(initialForm);
+                setIsSignUp((pre) => !pre);
+                userNameRef.current.focus();
+              }}>
+              {isSignUp ? 'Sign In' : 'Sign up'}
+            </Link>
+          </FormLabel>
         </Box>
-        <FormLabel>
-          {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-          <Link
-            href="#"
-            underline="hover"
-            onClick={(e) => {
-              e.preventDefault();
-              setFormError(initialForm);
-              setIsSignUp((pre) => !pre);
-              userNameRef.current.focus();
-            }}>
-            {isSignUp ? 'Sign In' : 'Sign up'}
-          </Link>
-        </FormLabel>
       </Box>
     </Container>
   );

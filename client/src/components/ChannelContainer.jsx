@@ -89,7 +89,10 @@ const ChannelContainer = () => {
             '& .str-chat__message-simple:hover .str-chat__message-simple__actions__action--thread':
               {
                 display: 'none'
-              }
+              },
+            '& button.str-chat__send-button path': {
+              fill: '#2e7d32'
+            }
           }}>
           <Channel
             EmptyStateIndicator={EmptyState}

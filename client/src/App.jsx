@@ -55,7 +55,13 @@ const App = () => {
       <Container
         maxWidth="100vw"
         disableGutters
-        sx={{ minHeight: '100vh', backgroundColor: '#ededed' }}>
+        sx={{
+          minHeight: '100vh',
+          backgroundColor: '#ededed',
+          '& .str-chat__avatar-fallback': {
+            backgroundColor: '#2e7d32'
+          }
+        }}>
         {status === STATUS_LOADING ? (
           <Box
             sx={{
