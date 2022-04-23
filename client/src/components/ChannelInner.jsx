@@ -121,8 +121,10 @@ const TeamChannelHeader = () => {
                 sx={{ alignItems: 'center', pl: 0, pointerEvents: 'all' }}>
                 {isMobile && (
                   <Grid item xs={2}>
-                    <IconButton sx={{ bgcolor: 'background.paper' }}>
-                      <ArrowBack onClick={() => dispatch(changeStatus(SHOW_MENU))} />
+                    <IconButton
+                      sx={{ bgcolor: 'background.paper' }}
+                      onClick={() => dispatch(changeStatus(SHOW_MENU))}>
+                      <ArrowBack />
                     </IconButton>
                   </Grid>
                 )}
