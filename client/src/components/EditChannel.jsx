@@ -4,7 +4,7 @@ import { useChatContext } from 'stream-chat-react';
 import { UserList, HeaderForChange } from './';
 import { useDispatch } from 'react-redux';
 import { changeStatus, changeType } from '../actions';
-import { RESET_STATUS, STATUS_EDITING } from '../actions/types';
+import { RESET_STATUS, SHOW_MENU } from '../actions/types';
 import { Box, Button, Container, IconButton, TextField } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
@@ -13,7 +13,7 @@ const ChannelNameInput = ({ channelName = '', errorText, nameRef, setChannelName
     e.preventDefault();
 
     setChannelName(e.target.value);
-  }
+  };
 
   return (
     <Box component="form" noValidate autoComplete="off">
@@ -30,8 +30,8 @@ const ChannelNameInput = ({ channelName = '', errorText, nameRef, setChannelName
         inputRef={nameRef}
       />
     </Box>
-  )
-}
+  );
+};
 
 const EditChannel = () => {
   const { channel } = useChatContext();
@@ -59,7 +59,10 @@ const EditChannel = () => {
     }
 
     if (nameChanged) {
-      await channel.update({ name: channelName }, { text: `Channel name changed to ${channelName}` });
+      await channel.update(
+        { name: channelName },
+        { text: `Channel name changed to ${channelName}` }
+      );
     }
 
     if (selectedUsers.length) {
@@ -68,52 +71,71 @@ const EditChannel = () => {
 
     setChannelName('');
     setSelectedUsers([]);
-    dispatch(changeStatus(STATUS_EDITING));
-  }
-  const handleCloseCreate = () => {
+    dispatch(changeStatus(RESET_STATUS));
+  };
+  const handleCloseEdit = () => {
     dispatch(changeStatus(RESET_STATUS));
     dispatch(changeType(''));
-  }
+  };
 
   return (
-    <Container component="main" sx={{
-      height: 'calc(100vh - 96px)',
-      mt: 10,
-      mb: 2
-    }}>
-      <Box sx={{
-        bgcolor: '#fff',
-        borderRadius: '25px',
-        maxHeight: '100%',
-        overflow: 'auto',
-        '&::-webkit-scrollbar': {
-          display: 'none'
-        }
+    <Container
+      component="main"
+      sx={{
+        height: 'calc(100vh - 96px)',
+        mt: 10,
+        mb: 2
       }}>
-        <Box sx={{
-          padding: 6,
+      <Box
+        sx={{
+          bgcolor: '#fff',
+          borderRadius: '25px',
+          maxHeight: '100%',
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
         }}>
-          <HeaderForChange handleClose={handleCloseCreate}>
+        <Box
+          sx={{
+            padding: 6,
+            pl: {
+              xs: 2.5
+            },
+            pr: {
+              xs: 2.5
+            }
+          }}>
+          <HeaderForChange
+            handleClose={handleCloseEdit}
+            customHandle={() => {
+              handleCloseEdit();
+              dispatch(changeStatus(SHOW_MENU));
+            }}>
             <IconButton>
               <Edit sx={{ width: '28px', height: '28px' }} />
             </IconButton>
             Edit Channel
           </HeaderForChange>
-          <ChannelNameInput channelName={channelName} errorText={errorText} nameRef={nameRef} setChannelName={setChannelName} />
-          <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel} isShowExisted={true} />
+          <ChannelNameInput
+            channelName={channelName}
+            errorText={errorText}
+            nameRef={nameRef}
+            setChannelName={setChannelName}
+          />
+          <UserList
+            setSelectedUsers={setSelectedUsers}
+            currentChannel={channel}
+            isShowExisted={true}
+          />
           <UserList setSelectedUsers={setSelectedUsers} currentChannel={channel} />
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ mt: 4, mb: 1 }}
-            onClick={updateChannel}
-          >
+          <Button variant="contained" size="large" sx={{ mt: 4, mb: 1 }} onClick={updateChannel}>
             Save changes
           </Button>
         </Box>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default EditChannel
+export default EditChannel;

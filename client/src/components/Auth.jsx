@@ -11,7 +11,7 @@ const initialForm = {
   confirmPassword: '',
   phoneNumber: '',
   avatarURL: ''
-}
+};
 
 const Auth = ({ client }) => {
   const [form, setForm] = useState(initialForm);
@@ -24,12 +24,12 @@ const Auth = ({ client }) => {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    let missingFields = Object.keys(form).map(element => {
-      if ((!isSignUp &&
-        element !== 'userName' &&
-        element !== 'password') ||
-        (element === 'avatarURL' &&
-          !form[element])) return '';
+    let missingFields = Object.keys(form).map((element) => {
+      if (
+        (!isSignUp && element !== 'userName' && element !== 'password') ||
+        (element === 'avatarURL' && !form[element])
+      )
+        return '';
 
       return !form[element] ? element : '';
     });
@@ -38,49 +38,50 @@ const Auth = ({ client }) => {
       ...initialForm
     };
 
-    missingFields.forEach(element => {
+    missingFields.forEach((element) => {
       if (element) {
         resetFormError = {
           ...resetFormError,
           [element]: 'Please input this field.'
-        }
+        };
       }
     });
 
-    if (form.password &&
-      form.confirmPassword &&
-      form.password !== form.confirmPassword) {
+    if (form.password && form.confirmPassword && form.password !== form.confirmPassword) {
       resetFormError = {
         ...resetFormError,
         password: 'Please make sure your passwords match.',
         confirmPassword: 'Please make sure your passwords match.'
-      }
+      };
     }
 
-    if (form.phoneNumber &&
-      !form.phoneNumber.match(/\d{10}/g)) {
+    if (form.phoneNumber && !form.phoneNumber.match(/\d{10}/g)) {
       resetFormError = {
         ...resetFormError,
         phoneNumber: 'Invalid phone number.'
-      }
+      };
     }
 
-    if (form.avatarURL &&
-      !form.avatarURL.match(/https?:\/\/.*\.(?:png|jpg)/g)) {
+    if (form.avatarURL && !form.avatarURL.match(/https?:\/\/.*\.(?:png|jpg)/g)) {
       resetFormError = {
         ...resetFormError,
         avatarURL: 'Invalid image link (.jpg or .png only).'
-      }
+      };
     }
 
     setFormError(resetFormError);
 
-    if (Object.values(resetFormError).some(el => !!el)) return;
+    if (Object.values(resetFormError).some((el) => !!el)) return;
 
     const { userName, password, phoneNumber, avatarURL } = form;
     const URL = `${process.env.REACT_APP_HOST}/auth`;
-    const { data: { token, userID, userPhoneNumber, hashedPassword, error, errorType, message } } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
-      userName, password, phoneNumber, avatarURL
+    const {
+      data: { token, userID, userPhoneNumber, hashedPassword, error, errorType, message }
+    } = await axios.post(`${URL}/${isSignUp ? 'signup' : 'login'}`, {
+      userName,
+      password,
+      phoneNumber,
+      avatarURL
     });
 
     if (error && errorType && message) {
@@ -94,15 +95,15 @@ const Auth = ({ client }) => {
     dispatch(login({ token, userID, userName, userPhoneNumber, hashedPassword, client }));
     dispatch(changeType(''));
     dispatch(changeStatus(STATUS_LOADING));
-  }
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  };
 
   useEffect(() => {
     setForm(initialForm);
-  }, [isSignUp])
+  }, [isSignUp]);
 
   useEffect(() => {
     let timeOut;
@@ -115,24 +116,33 @@ const Auth = ({ client }) => {
 
     return () => {
       clearTimeout(timeOut);
-    }
+    };
   }, [errorMessage]);
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box sx={{
-        paddingTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}>
-        <Typography component="h1" variant="h3" sx={{ width: '100%', mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+      <Box
+        sx={{
+          paddingTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+        <Typography
+          component="h1"
+          variant="h3"
+          sx={{ width: '100%', mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
           FERB<FormLabel sx={{ fontSize: '0.75em' }}>ooK</FormLabel>
         </Typography>
         <Typography component="h1" variant="h5" sx={{ width: '100%' }}>
           {isSignUp ? 'Sign up' : 'Sign in'}
         </Typography>
-        <Box component="form" onSubmit={handleSubmitForm} noValidate sx={{ mt: 1 }} autoComplete="off">
+        <Box
+          component="form"
+          onSubmit={handleSubmitForm}
+          noValidate
+          sx={{ mt: 1 }}
+          autoComplete="off">
           <TextField
             margin="dense"
             required
@@ -201,36 +211,27 @@ const Auth = ({ client }) => {
               helperText={formError.confirmPassword}
             />
           )}
-          <Button
-            fullWidth
-            variant="contained"
-            type="submit"
-            size="large"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button fullWidth variant="contained" type="submit" size="large" sx={{ mt: 3, mb: 2 }}>
             {isSignUp ? 'Sign up' : 'Sign in'}
           </Button>
         </Box>
         <FormLabel>
-          {
-            isSignUp ?
-              'Already have an account? ' :
-              'Don\'t have an account? '
-          }
-          <Link href="#" underline="hover" onClick={(e) => {
-            e.preventDefault();
-            setFormError(initialForm);
-            setIsSignUp(pre => !pre);
-            userNameRef.current.focus();
-          }}>
-            {
-              isSignUp ? 'Sign In' : 'Sign up'
-            }
+          {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+          <Link
+            href="#"
+            underline="hover"
+            onClick={(e) => {
+              e.preventDefault();
+              setFormError(initialForm);
+              setIsSignUp((pre) => !pre);
+              userNameRef.current.focus();
+            }}>
+            {isSignUp ? 'Sign In' : 'Sign up'}
           </Link>
         </FormLabel>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

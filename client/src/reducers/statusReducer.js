@@ -1,4 +1,10 @@
-import { STATUS_CREATING, STATUS_EDITING, RESET_STATUS, STATUS_EDIT_PROFILE, STATUS_LOADING } from '../actions/types';
+import {
+  STATUS_CREATING,
+  STATUS_EDITING,
+  RESET_STATUS,
+  STATUS_EDIT_PROFILE,
+  STATUS_LOADING
+} from '../actions/types';
 
 const initialState = '';
 
@@ -10,8 +16,8 @@ const clientReducer = (state = STATUS_LOADING, action) => {
       return STATUS_EDITING;
     case STATUS_EDIT_PROFILE:
       return STATUS_EDIT_PROFILE;
-      case STATUS_LOADING:
-        return STATUS_LOADING;
+    case STATUS_LOADING:
+      return STATUS_LOADING;
     case RESET_STATUS:
       return initialState;
     default:

@@ -18,7 +18,6 @@
     "react-scripts": "5.0.0",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
-    "sass": "^1.49.10",
     "stream-chat": "^6.3.0",
     "stream-chat-react": "^8.1.0",
     "universal-cookie": "^4.0.4",
@@ -28,7 +27,10 @@
     "start": "env-cmd -f .env.development.local react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,css,md,json}\" --config ./.prettierrc"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +52,10 @@
   },
   "devDependencies": {
     "@redux-devtools/extension": "^3.2.2",
-    "env-cmd": "^10.1.0"
+    "env-cmd": "^10.1.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2"
   }
 }

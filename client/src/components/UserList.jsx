@@ -1,49 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, useChatContext } from 'stream-chat-react';
-import { Divider, ListSubheader, List, ListItem, IconButton, ListItemButton, ListItemIcon, ListItemText, Skeleton } from '@mui/material';
+import {
+  Divider,
+  ListSubheader,
+  List,
+  ListItem,
+  IconButton,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Skeleton
+} from '@mui/material';
 import { CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
 
 const ListContainer = ({ children, isShowExisted }) => {
   return (
-    <List subheader={
-      <ListSubheader disableSticky component="div" sx={{ pl: 0, pr: 0 }}>
-        {isShowExisted ? 'Current User(s)' : 'Available User(s)'}
-        <Divider />
-      </ListSubheader>
-    } sx={{ padding: 0, pt: 1, pb: 1 }}>
+    <List
+      subheader={
+        <ListSubheader disableSticky component="div" sx={{ pl: 0, pr: 0 }}>
+          {isShowExisted ? 'Current User(s)' : 'Available User(s)'}
+          <Divider />
+        </ListSubheader>
+      }
+      sx={{ padding: 0, pt: 1, pb: 1 }}>
       {children}
     </List>
-  )
-}
+  );
+};
 
 const UserItem = ({ user, setSelectedUsers, isShowExisted }) => {
   const [invited, setInvited] = useState(false);
 
   const handleInvited = () => {
     if (invited) {
-      setSelectedUsers(
-        pre => pre.filter(id => id !== user.id)
-      )
+      setSelectedUsers((pre) => pre.filter((id) => id !== user.id));
     } else {
-      setSelectedUsers(
-        pre => [...pre, user.id]
-      );
+      setSelectedUsers((pre) => [...pre, user.id]);
     }
 
-    setInvited(pre => !pre);
-  }
+    setInvited((pre) => !pre);
+  };
 
   return (
-    <ListItem disablePadding onClick={isShowExisted ? () => { } : handleInvited} secondaryAction={
-      isShowExisted ? '' :
-        (invited ?
-          (<IconButton edge="end" aria-label="delete">
+    <ListItem
+      disablePadding
+      onClick={isShowExisted ? () => {} : handleInvited}
+      secondaryAction={
+        isShowExisted ? (
+          ''
+        ) : invited ? (
+          <IconButton edge="end" aria-label="delete">
             <CheckBox />
-          </IconButton>) :
-          (<IconButton edge="end" aria-label="delete">
+          </IconButton>
+        ) : (
+          <IconButton edge="end" aria-label="delete">
             <CheckBoxOutlineBlank />
-          </IconButton>))
-    }>
+          </IconButton>
+        )
+      }>
       <ListItemButton>
         <ListItemIcon>
           <Avatar image={user.image} name={user.name} size={32} />
@@ -51,41 +65,38 @@ const UserItem = ({ user, setSelectedUsers, isShowExisted }) => {
         <ListItemText primary={user.name} />
       </ListItemButton>
     </ListItem>
-  )
-}
+  );
+};
 
-const Loading = () => (<>
+const Loading = () => (
+  <>
+    <ListItem disablePadding>
+      <ListItemButton>
+        <ListItemIcon>
+          <Skeleton variant="circular" width={32} height={32} />
+        </ListItemIcon>
+        <ListItemText primary={<Skeleton variant="text" width="100%" height={32} />} />
+      </ListItemButton>
+    </ListItem>
+    <ListItem disablePadding>
+      <ListItemButton>
+        <ListItemIcon>
+          <Skeleton variant="circular" width={32} height={32} />
+        </ListItemIcon>
+        <ListItemText primary={<Skeleton variant="text" width="100%" height={32} />} />
+      </ListItemButton>
+    </ListItem>
+  </>
+);
+
+const Error = ({ children }) => (
   <ListItem disablePadding>
     <ListItemButton>
-      <ListItemIcon>
-        <Skeleton variant="circular" width={32} height={32} />
-      </ListItemIcon>
-      <ListItemText primary={
-        <Skeleton variant="text" width="100%" height={32} />
-      } />
+      <ListItemIcon></ListItemIcon>
+      <ListItemText primary={<i>{children}</i>} />
     </ListItemButton>
   </ListItem>
-  <ListItem disablePadding>
-    <ListItemButton>
-      <ListItemIcon>
-        <Skeleton variant="circular" width={32} height={32} />
-      </ListItemIcon>
-      <ListItemText primary={
-        <Skeleton variant="text" width="100%" height={32} />
-      } />
-    </ListItemButton>
-  </ListItem>
-</>);
-
-const Error = ({ children }) => (<ListItem disablePadding>
-  <ListItemButton>
-    <ListItemIcon>
-    </ListItemIcon>
-    <ListItemText primary={
-      <i>{children}</i>
-    } />
-  </ListItemButton>
-</ListItem>)
+);
 
 const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = false }) => {
   const { client } = useChatContext();
@@ -104,21 +115,21 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
             { id: { $ne: client.userID } },
             { id: 1 },
             { limit: 8 }
-          )
+          );
 
           if (response?.members?.length && !isWillUnMount) {
-            existedUsers = response.members.map(el => el.user_id);
+            existedUsers = response.members.map((el) => el.user_id);
           }
         }
 
-        const existedList = [...existedUsers, client.userID]
+        const existedList = [...existedUsers, client.userID];
         const query = isShowExisted ? { $in: existedList } : { $nin: existedList };
 
         const response = await client.queryUsers(
           { id: query, role: { $ne: 'admin' } },
           { id: 1 },
           { limit: 8 }
-        )
+        );
 
         if (isWillUnMount) return;
 
@@ -133,25 +144,32 @@ const UserList = ({ setSelectedUsers, currentChannel = null, isShowExisted = fal
       }
     })();
 
-    return () => isWillUnMount = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => (isWillUnMount = true);
   }, []);
 
   return (
     <ListContainer isShowExisted={isShowExisted}>
-      {(message) ? (
-        message === 'Loading' ?
-          <Loading /> :
-          (<Error>
-            {message}
-          </Error>)
+      {message ? (
+        message === 'Loading' ? (
+          <Loading />
+        ) : (
+          <Error>{message}</Error>
+        )
       ) : (
         users?.map((user, i) => {
-          return <UserItem index={i} key={user.id} user={user} setSelectedUsers={setSelectedUsers} isShowExisted={isShowExisted} />
+          return (
+            <UserItem
+              index={i}
+              key={user.id}
+              user={user}
+              setSelectedUsers={setSelectedUsers}
+              isShowExisted={isShowExisted}
+            />
+          );
         })
       )}
     </ListContainer>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;

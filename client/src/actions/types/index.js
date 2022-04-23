@@ -7,3 +7,5 @@ export const RESET_STATUS = 'RESET_STATUS';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const STATUS_EDIT_PROFILE = 'STATUS_EDIT_PROFILE';
 export const STATUS_LOADING = 'STATUS_LOADING';
+export const SHOW_MENU = 'SHOW_MENU';
+export const HIDE_MENU = 'HIDE_MENU';

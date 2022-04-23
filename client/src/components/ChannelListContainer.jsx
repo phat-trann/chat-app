@@ -6,15 +6,15 @@ import { AppBar, Box, Container, Grid } from '@mui/material';
 import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
 
 import { changeStatus } from '../actions';
-import { RESET_STATUS, STATUS_EDIT_PROFILE } from '../actions/types';
+import { HIDE_MENU, RESET_STATUS, SHOW_MENU, STATUS_EDIT_PROFILE } from '../actions/types';
 
 const customChannelTeamFilter = (channels) => {
-  return channels.filter(channel => channel.type === 'team');
-}
+  return channels.filter((channel) => channel.type === 'team');
+};
 
 const customChannelMessageFilter = (channels) => {
-  return channels.filter(channel => channel.type === 'messaging');
-}
+  return channels.filter((channel) => channel.type === 'messaging');
+};
 
 const customStyle = {
   width: '100%',
@@ -34,36 +34,48 @@ const customStyle = {
     boxShadow: 'none',
     transition: 'none'
   }
-}
+};
 
 const ChannelListContainer = () => {
   const clientResults = useSelector((state) => state.client);
   const currentStatus = useSelector((state) => state.status);
-  const image = useSelector(state => state.client.newImage);
+  const image = useSelector((state) => state.client.newImage);
   const dispatch = useDispatch();
   const client = clientResults.client;
   const filter = { members: { $in: [clientResults.userID] } };
 
   return (
-    <Container sx={{
-      height: '100vh',
-      pt: 8,
-      overflow: 'auto',
-      '&::-webkit-scrollbar': {
-        display: 'none'
-      }
-    }}>
+    <Container
+      sx={{
+        height: '100vh',
+        pt: 8,
+        overflow: 'auto',
+        '&::-webkit-scrollbar': {
+          display: 'none'
+        }
+      }}>
       <Box sx={{ width: '100%' }}>
-        <AppBar position="fixed" sx={{ background: 'none', boxShadow: 'none', pointerEvents: 'none' }}>
+        <AppBar
+          position="fixed"
+          sx={{ background: 'none', boxShadow: 'none', pointerEvents: 'none' }}>
           <Grid maxWidth="lg" container spacing={0} sx={{ margin: 'auto' }}>
             <Grid item xs={12} md={4}>
               <Container sx={{ pt: 1.5, pb: 1, background: '#ededed' }}>
                 <Grid container sx={{ alignItems: 'center', pl: 0, pointerEvents: 'all' }}>
                   <Grid item xs={2} sx={{ '& div': { cursor: 'pointer' } }}>
-                    <Avatar image={image || client.user.image} size={44} onClick={() => {
-                      if (currentStatus === STATUS_EDIT_PROFILE) dispatch(changeStatus(RESET_STATUS));
-                      else dispatch(changeStatus(STATUS_EDIT_PROFILE));
-                    }} />
+                    <Avatar
+                      image={image || client.user.image}
+                      size={44}
+                      onClick={() => {
+                        if (currentStatus === STATUS_EDIT_PROFILE) {
+                          dispatch(changeStatus(RESET_STATUS));
+                          dispatch(changeStatus(SHOW_MENU));
+                        } else {
+                          dispatch(changeStatus(STATUS_EDIT_PROFILE));
+                          dispatch(changeStatus(HIDE_MENU));
+                        }
+                      }}
+                    />
                   </Grid>
                   <Grid item xs={10}>
                     <ChannelSearch />
@@ -71,8 +83,7 @@ const ChannelListContainer = () => {
                 </Grid>
               </Container>
             </Grid>
-            <Grid item xs={0} md={8}>
-            </Grid>
+            <Grid item xs={0} md={8}></Grid>
           </Grid>
         </AppBar>
       </Box>
@@ -81,41 +92,21 @@ const ChannelListContainer = () => {
           <ChannelList
             filters={filter}
             channelRenderFilterFn={customChannelTeamFilter}
-            List={(listProps) => (
-              <TeamChannelList
-                {...listProps}
-                type="team"
-              />
-            )}
-            Preview={(previewProps) => (
-              <TeamChannelPreview
-                {...previewProps}
-                type="team"
-              />
-            )}
+            List={(listProps) => <TeamChannelList {...listProps} type="team" />}
+            Preview={(previewProps) => <TeamChannelPreview {...previewProps} type="team" />}
           />
         </Box>
         <Box sx={customStyle}>
           <ChannelList
             filters={filter}
             channelRenderFilterFn={customChannelMessageFilter}
-            List={(listProps) => (
-              <TeamChannelList
-                {...listProps}
-                type="messaging"
-              />
-            )}
-            Preview={(previewProps) => (
-              <TeamChannelPreview
-                {...previewProps}
-                type="messaging"
-              />
-            )}
+            List={(listProps) => <TeamChannelList {...listProps} type="messaging" />}
+            Preview={(previewProps) => <TeamChannelPreview {...previewProps} type="messaging" />}
           />
         </Box>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default ChannelListContainer
+export default ChannelListContainer;

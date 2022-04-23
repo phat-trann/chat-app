@@ -3,7 +3,7 @@ import { useChatContext } from 'stream-chat-react';
 import { UserList, HeaderForChange } from './';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeStatus, changeType } from '../actions';
-import { RESET_STATUS } from '../actions/types';
+import { RESET_STATUS, SHOW_MENU } from '../actions/types';
 import { AddCircleOutline } from '@mui/icons-material';
 import { Box, Button, Container, IconButton, TextField } from '@mui/material';
 
@@ -12,7 +12,7 @@ const ChannelNameInput = ({ channelName = '', errorText, nameRef, setChannelName
     e.preventDefault();
 
     setChannelName(e.target.value);
-  }
+  };
 
   return (
     <Box component="form" noValidate autoComplete="off">
@@ -29,8 +29,8 @@ const ChannelNameInput = ({ channelName = '', errorText, nameRef, setChannelName
         inputRef={nameRef}
       />
     </Box>
-  )
-}
+  );
+};
 
 const CreateChannel = () => {
   const { client, setActiveChannel } = useChatContext();
@@ -38,17 +38,17 @@ const CreateChannel = () => {
   const [selectedUsers, setSelectedUsers] = useState([client.userID || '']);
   const [errorText, setErrorText] = useState('');
   const nameRef = useRef();
-  const createType = useSelector(state => state.type);
+  const createType = useSelector((state) => state.type);
   const dispatch = useDispatch();
   const createChannel = async (e) => {
     e.preventDefault();
     setErrorText('');
 
-    if ((createType === 'team' && !channelName)) {
+    if (createType === 'team' && !channelName) {
       setErrorText('Please input this fields.');
       nameRef.current.focus();
       return;
-    };
+    }
 
     if (selectedUsers.length < 2) {
       if (createType === 'team') {
@@ -59,11 +59,12 @@ const CreateChannel = () => {
       }
 
       return;
-    };
+    }
 
     try {
       const newChannel = await client.channel(createType, channelName, {
-        name: channelName, members: selectedUsers
+        name: channelName,
+        members: selectedUsers
       });
 
       await newChannel.watch();
@@ -76,50 +77,68 @@ const CreateChannel = () => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   const handleCloseCreate = () => {
     dispatch(changeStatus(RESET_STATUS));
     dispatch(changeType(''));
-  }
+    dispatch(changeStatus(SHOW_MENU));
+  };
 
   return (
-    <Container component="main" sx={{
-      height: 'calc(100vh - 96px)',
-      mt: 10,
-      mb: 2
-    }}>
-      <Box sx={{
-        bgcolor: '#fff',
-        borderRadius: '25px',
-        maxHeight: '100%',
-        overflow: 'auto',
-        '&::-webkit-scrollbar': {
-          display: 'none'
-        }
+    <Container
+      component="main"
+      sx={{
+        height: 'calc(100vh - 96px)',
+        mt: 10,
+        mb: 2
       }}>
-        <Box sx={{
-          padding: 6,
+      <Box
+        sx={{
+          bgcolor: '#fff',
+          borderRadius: '25px',
+          maxHeight: '100%',
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            display: 'none'
+          }
         }}>
-          <HeaderForChange handleClose={handleCloseCreate}>
+        <Box
+          sx={{
+            padding: 6,
+            pl: {
+              xs: 2.5
+            },
+            pr: {
+              xs: 2.5
+            }
+          }}>
+          <HeaderForChange
+            handleClose={handleCloseCreate}
+            customHandle={() => {
+              handleCloseCreate();
+              dispatch(changeStatus(SHOW_MENU));
+            }}>
             <IconButton>
               <AddCircleOutline sx={{ width: '28px', height: '28px' }} />
             </IconButton>
             {createType === 'team' ? 'Create a New Channel' : 'Send a direct Message'}
           </HeaderForChange>
-          {createType === 'team' && <ChannelNameInput channelName={channelName} errorText={errorText} nameRef={nameRef} setChannelName={setChannelName} />}
+          {createType === 'team' && (
+            <ChannelNameInput
+              channelName={channelName}
+              errorText={errorText}
+              nameRef={nameRef}
+              setChannelName={setChannelName}
+            />
+          )}
           <UserList setSelectedUsers={setSelectedUsers} />
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ mt: 4, mb: 1 }}
-            onClick={createChannel}
-          >
+          <Button variant="contained" size="large" sx={{ mt: 4, mb: 1 }} onClick={createChannel}>
             {createType === 'team' ? 'Create channel' : 'Create Message group'}
           </Button>
         </Box>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default CreateChannel
+export default CreateChannel;
