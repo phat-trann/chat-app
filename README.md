@@ -1,4 +1,4 @@
-# Chat application using ReactJS: https://ferbook.netlify.app/
+# Chat application using ReactJS (node 17.3.1): https://ferbook.netlify.app/
 ### Phase 1: Build a chat-app using stream-chat - ***Done***
   > Refer https://getstream.io/chat/docs/react
 ### Phase 2: Fix issues - ***Done***
